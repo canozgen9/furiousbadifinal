@@ -1,0 +1,40 @@
+
+running.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+r1
+  rotate: false
+  xy: 1, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+r3
+  rotate: false
+  xy: 1, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+r2
+  rotate: false
+  xy: 253, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+r0
+  rotate: false
+  xy: 505, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+r4
+  rotate: false
+  xy: 505, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1

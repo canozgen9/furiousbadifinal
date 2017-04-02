@@ -1,0 +1,47 @@
+
+crouching.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+c4
+  rotate: false
+  xy: 1, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+c1
+  rotate: false
+  xy: 1, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+c0
+  rotate: false
+  xy: 253, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+c5
+  rotate: false
+  xy: 253, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+c2
+  rotate: false
+  xy: 505, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
+c3
+  rotate: false
+  xy: 757, 1
+  size: 250, 400
+  orig: 250, 400
+  offset: 0, 0
+  index: -1
