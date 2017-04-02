@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="500" height="100" tilewidth="32" tileheight="32" nextobjectid="144">
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="500" height="100" tilewidth="32" tileheight="32" nextobjectid="145">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="16">
   <image source="tileset.png" width="128" height="128"/>
  </tileset>
@@ -52,21 +52,30 @@
   <object id="114" x="716" y="1910.67" width="18.6667" height="256"/>
   <object id="115" x="47.3333" y="2146.67" width="687.333" height="28.6667"/>
  </objectgroup>
- <objectgroup name="enemy1"/>
+ <objectgroup name="enemy1">
+  <object id="128" x="1860" y="2696"/>
+  <object id="133" x="1726.67" y="2733.33"/>
+ </objectgroup>
  <objectgroup name="enemy2">
   <object id="117" x="761.333" y="3066.67"/>
   <object id="125" x="1324" y="2064"/>
+  <object id="129" x="2636" y="2893.33"/>
+  <object id="131" x="1892" y="2868"/>
  </objectgroup>
  <objectgroup name="enemy3">
   <object id="118" x="288.333" y="2578.33"/>
   <object id="124" x="1173.33" y="2072"/>
+  <object id="132" x="1778.67" y="2984"/>
  </objectgroup>
  <objectgroup name="enemy4">
   <object id="119" x="100.333" y="2589"/>
   <object id="121" x="289.333" y="2334.67"/>
   <object id="123" x="770.667" y="2216.33"/>
+  <object id="126" x="2093.33" y="2876"/>
+  <object id="130" x="2148" y="2566.67"/>
  </objectgroup>
  <objectgroup name="enemy5">
+  <object id="127" x="2353.33" y="2760"/>
   <object id="135" x="3234.67" y="2072"/>
  </objectgroup>
  <objectgroup name="redbox">
@@ -83,6 +92,6 @@
   <object id="139" x="3082.67" y="2094.67"/>
  </objectgroup>
  <objectgroup name="player">
-  <object id="143" x="1543" y="2111" width="29.3333" height="24"/>
+  <object id="144" x="117" y="3035"/>
  </objectgroup>
 </map>

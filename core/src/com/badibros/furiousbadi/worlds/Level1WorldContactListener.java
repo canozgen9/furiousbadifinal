@@ -2,6 +2,7 @@ package com.badibros.furiousbadi.worlds;
 
 import com.badibros.furiousbadi.objects.gameWorldObjects.Box;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Bullet;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Coin;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
 import com.badibros.furiousbadi.utils.GameVariables;
@@ -65,6 +66,13 @@ public class Level1WorldContactListener implements ContactListener {
                 }else{
                     ((Box) fB.getUserData()).onHitted(((Bullet) fA.getUserData()).damage);
                     ((Bullet) fA.getUserData()).onHitted();
+                }
+                break;
+            case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_COIN:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_COIN) {
+                    ((Coin) fA.getUserData()).onHitted();
+                } else {
+                    ((Coin) fB.getUserData()).onHitted();
                 }
                 break;
             default:

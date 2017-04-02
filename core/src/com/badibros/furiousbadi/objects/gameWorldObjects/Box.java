@@ -9,35 +9,31 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 
 public class Box extends GameObject {
 
-    public float health = 1000f;
-
-    public String color;
-
+    public boolean playerDetected = false;
+    MenuPlayer player;
+    //Impulses
+    Vector2 rightImpulse = new Vector2(0.1f, 0);
+    Vector2 leftImpulse = new Vector2(-0.1f, 0);
+    Vector2 upImpulse = new Vector2(0, 5f);
+    Vector2 downImpulse = new Vector2(0, -0.1f);
+    private float health = 250f;
+    private String color;
+    private boolean runningRight = true;
+    private TextureRegion textureRegion;
     private boolean destroy = false;
     private boolean destroyed = false;
-
-    public boolean runningRight = true;
-
-    public TextureRegion textureRegion;
-
-    MenuPlayer player;
-
-    public boolean playerDetected = false;
-
     public Box(FuriousBadi game, World world, float x, float y, String color) {
         super(game, world, x, y);
         this.color = color;
@@ -68,12 +64,6 @@ public class Box extends GameObject {
 
         shape.dispose();
     }
-
-    //Impulses
-    Vector2 rightImpulse = new Vector2(0.1f, 0);
-    Vector2 leftImpulse = new Vector2(-0.1f, 0);
-    Vector2 upImpulse = new Vector2(0, 5f);
-    Vector2 downImpulse = new Vector2(0, -0.1f);
 
     @Override
     public void getInputs(float delta) {

@@ -23,47 +23,43 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 
 public class MenuPlayer extends GameObject {
 
+    public int experience = 1;
+    public int level = 1;
+    public boolean runningRight = true;
+    public boolean isFootContact = false;
+    public boolean isJumping = true;
+    public boolean isCrouching = false;
+    public float angle = 0;
+    private boolean isFiring = false;
+    private TextureRegion bowTexture = new TextureRegion(new Texture("spritesheets/player/bow.png"));
+    private Sprite bow = new Sprite();
+    private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
+    //Impulses
+    private Vector2 rightImpulse = new Vector2(0.05f, 0);
+    private Vector2 leftImpulse = new Vector2(-0.05f, 0);
+    private Vector2 upImpulse = new Vector2(0, 110f);
+    private Vector2 downImpulse = new Vector2(0, -0.05f);
     private TextureAtlas runningtextureAtlas;
     private TextureAtlas crouchingTextureAtlas;
     private Texture standing = new Texture("spritesheets/player/standing/s0.png");
     private Texture jumping = new Texture("spritesheets/player/jumping/j0.png");
-
-    TextureRegion bowTexture = new TextureRegion(new Texture("spritesheets/player/bow.png"));
-    Sprite bow = new Sprite();
-
     private Animation playerRunning;
     private Animation playerCrouching;
-
     private Array<TextureRegion> runningframes;
     private Array<TextureRegion> crouchingFrames;
     private TextureRegion jumpingFrame;
     private TextureRegion standingFrame;
     private TextureRegion standingWithCrouching;
     private TextureRegion firingFrame;
-
     private float stateTimer;
-
-    short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
-
-    public boolean runningRight = true;
-
     private float cameraTimer = 0;
     private float bulletTimer = 0;
-
-    public boolean isFootContact = false;
-
-    public boolean isJumping = true;
-    public boolean isCrouching = false;
-    public boolean isFiring = false;
-
-    public float angle = 0;
-
     public MenuPlayer(FuriousBadi game, World world, float x, float y) {
         super(game, world, x, y);
         createBody();
@@ -126,7 +122,7 @@ public class MenuPlayer extends GameObject {
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
         fixtureDef.filter.categoryBits = GameVariables.BIT_MENUPLAYER;
-        fixtureDef.filter.maskBits = GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX;
+        fixtureDef.filter.maskBits = GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX;
         getB2d().createFixture(fixtureDef).setUserData(this);
         CircleShape shape = new CircleShape();
         shape.setRadius(GameVariables.scale(20));
@@ -148,12 +144,6 @@ public class MenuPlayer extends GameObject {
         shape.dispose();
         shape1.dispose();
     }
-
-    //Impulses
-    Vector2 rightImpulse = new Vector2(0.05f, 0);
-    Vector2 leftImpulse = new Vector2(-0.05f, 0);
-    Vector2 upImpulse = new Vector2(0, 110f);
-    Vector2 downImpulse = new Vector2(0, -0.05f);
 
     @Override
     public void getInputs(float delta) {

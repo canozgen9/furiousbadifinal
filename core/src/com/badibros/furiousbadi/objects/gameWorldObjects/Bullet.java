@@ -3,43 +3,29 @@ package com.badibros.furiousbadi.objects.gameWorldObjects;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUBUTTON;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUWALLS;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 
 public class Bullet extends GameObject {
 
-      private TextureRegion bulletInitialFrame;
-
-
     public float damage = 80f;
-
-    Array<TextureRegion> explodeFrames;
-    Animation explodeAnimation;
+    private Array<TextureRegion> explodeFrames;
+    private Animation explodeAnimation;
+    private TextureRegion bulletInitialFrame;
     private float stateTimer = 0;
 
     private MenuPlayer player;
@@ -67,7 +53,7 @@ public class Bullet extends GameObject {
             setRotation(-player.angle);
         }
 
-        getB2d().applyLinearImpulse((player.runningRight? 0.8f : -0.8f),player.angle/100,getB2d().getWorldCenter().x,getB2d().getWorldCenter().y, false);
+        getB2d().applyLinearImpulse((player.runningRight ? 0.3f : -0.3f), player.angle / 100, getB2d().getWorldCenter().x, getB2d().getWorldCenter().y, false);
         System.out.println((float)(Math.sin(player.angle)));
 
         explodeFrames = new Array<TextureRegion>();
@@ -96,7 +82,7 @@ public class Bullet extends GameObject {
             }
         }
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.gravityScale = 0.2f;
+        bodyDef.gravityScale = 0.05f;
         bodyDef.fixedRotation = false;
         setB2d(getWorld().createBody(bodyDef));
         FixtureDef fixtureDef = new FixtureDef();
