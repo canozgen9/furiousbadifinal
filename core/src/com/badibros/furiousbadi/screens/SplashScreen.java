@@ -2,7 +2,6 @@ package com.badibros.furiousbadi.screens;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameScreen;
-import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,15 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class SplashScreen extends GameScreen {
 
+    private Texture logo;
+    private boolean comingFromLeft = true;
+    private boolean goingToRight = false;
     private float screenTimer = 0;
     private float screenTimeout = 5;
-
-    Texture logo;
-
-    private float x,y;
-
-    boolean comingFromLeft = true;
-    boolean goingToRight = false;
+    private float x, y;
 
     public SplashScreen(FuriousBadi game) {
         super(game);
@@ -50,7 +46,7 @@ public class SplashScreen extends GameScreen {
         }
 
         if(x>=Gdx.graphics.getWidth()){
-            game.setScreen(new MainMenuScreen(game));
+            game.setScreen(new MainScreen(game));
         }
         super.update(delta);
     }

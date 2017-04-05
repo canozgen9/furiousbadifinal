@@ -2,7 +2,7 @@ package com.badibros.furiousbadi.objects.mainMenuWorldObjects;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,13 +14,11 @@ import com.badlogic.gdx.physics.box2d.World;
 public class MenuButton extends GameObject{
 
 
+    private String defaultImage, selectedImage;
     private Clickable clickable;
-
     private boolean doWork = false;
     private float doWorkTimer = 0;
     private int doWorkTimeout = 1;
-
-    String defaultImage,selectedImage;
 
     public MenuButton(FuriousBadi game, World world, float x, float y, String defaultImage, String selectedImage, Clickable clickable) {
         super(game, world,x,y);
@@ -35,15 +33,14 @@ public class MenuButton extends GameObject{
         setTexture(new Texture(defaultImage));
 
         //Set dimensions
-        setTextureWidth(GameVariables.scale(300));
-        setTextureHeight(GameVariables.scale(80));
+        setSize(GameVariables.scale(300), GameVariables.scale(80));
 
     }
 
     @Override
     public void createBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(GameVariables.scale(getX()), GameVariables.scale(getY()));
+        bodyDef.position.set(GameVariables.scale(getInitialX()), GameVariables.scale(getInitialY()));
         bodyDef.type = BodyDef.BodyType.StaticBody;
         setB2d(getWorld().createBody(bodyDef));
         FixtureDef fixtureDef = new FixtureDef();
@@ -78,8 +75,8 @@ public class MenuButton extends GameObject{
         }
         if(doWork){
             doWorkTimer += delta;
-            if( ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom >= 0.700){
-                ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom-=0.005;
+            if (((MainScreen) getGame().getScreen()).gameCamera.zoom >= 0.700) {
+                ((MainScreen) getGame().getScreen()).gameCamera.zoom -= 0.005;
             }
             if(doWorkTimer >= doWorkTimeout *1f){
                 clickable.onClick();
@@ -92,9 +89,14 @@ public class MenuButton extends GameObject{
     public void render(float delta) {
         if(getB2d()!=null){
             getGame().getBatch().begin();
-            getGame().getBatch().draw(getTexture(),getB2d().getPosition().x-getTextureWidth()/2,getB2d().getPosition().y-getTextureHeight()/2,getTextureWidth(),getTextureHeight());
+            getGame().getBatch().draw(getTexture(), getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2, getWidth(), getHeight());
             getGame().getBatch().end();
         }
+    }
+
+    @Override
+    public void afterDestroyedBody() {
+
     }
 }
 

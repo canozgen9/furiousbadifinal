@@ -1,10 +1,7 @@
 package com.badibros.furiousbadi;
 
-import com.badibros.furiousbadi.screens.ExitScreen;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
-import com.badibros.furiousbadi.screens.SplashScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -12,7 +9,7 @@ public class FuriousBadi extends Game {
 
 	public static boolean DEBUGGING = false;
 
-	public FPSLogger fpsLogger;
+	private FPSLogger fpsLogger;
 
 	//Batch
 	private SpriteBatch batch;
@@ -22,7 +19,7 @@ public class FuriousBadi extends Game {
 		batch = new SpriteBatch();
 		fpsLogger = new FPSLogger();
 //		setScreen(new SplashScreen(this));
-		setScreen(new MainMenuScreen(this));
+		setScreen(new MainScreen(this));
 	}
 
 	@Override

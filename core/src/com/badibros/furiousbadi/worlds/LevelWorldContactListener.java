@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 
-public class Level1WorldContactListener implements ContactListener {
+public class LevelWorldContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         Gdx.app.debug("CONTACT DETECTED",contact.getFixtureA().getUserData()+" - "+contact.getFixtureB().getUserData());
@@ -73,6 +73,13 @@ public class Level1WorldContactListener implements ContactListener {
                     ((Coin) fA.getUserData()).onHitted();
                 } else {
                     ((Coin) fB.getUserData()).onHitted();
+                }
+                break;
+            case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_FINISH_AREA:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_COIN) {
+                    ((LevelWorld) ((MenuPlayer) fA.getUserData()).gameWorld).finishGame(1);
+                } else {
+                    ((LevelWorld) ((MenuPlayer) fB.getUserData()).gameWorld).finishGame(1);
                 }
                 break;
             default:

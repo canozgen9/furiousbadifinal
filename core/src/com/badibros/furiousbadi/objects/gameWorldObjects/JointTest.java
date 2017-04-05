@@ -18,30 +18,25 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
 
 public class JointTest extends GameObject {
 
     public float health = 1000f;
-
-    private boolean destroy = false;
-    private boolean destroyed = false;
-
     public boolean runningRight = true;
-
     MenuPlayer player;
-
-    private Body secondBody;
-
-
     TextureRegion textureA = new TextureRegion(new Texture("spritesheets/enviroment/sphereHolder.png"));
     TextureRegion textureB = new TextureRegion(new Texture("spritesheets/enviroment/sphere.png"));
-
     Sprite spriteB = new Sprite();
-
+    //Impulses
+    Vector2 rightImpulse = new Vector2(0.1f, 0);
+    Vector2 leftImpulse = new Vector2(-0.1f, 0);
+    Vector2 upImpulse = new Vector2(0, 5f);
+    Vector2 downImpulse = new Vector2(0, -0.1f);
+    private boolean destroy = false;
+    private boolean destroyed = false;
+    private Body secondBody;
     public JointTest(FuriousBadi game, World world, float x, float y) {
         super(game, world, x, y);
         createBody();
@@ -62,7 +57,7 @@ public class JointTest extends GameObject {
     public void createBody() {
         //RECTANGLE
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(GameVariables.scale(getX()), GameVariables.scale(getY()));
+        bodyDef.position.set(GameVariables.scale(getInitialX()), GameVariables.scale(getInitialY()));
         bodyDef.type = BodyDef.BodyType.StaticBody;
         setB2d(getWorld().createBody(bodyDef));
         FixtureDef fixtureDef = new FixtureDef();
@@ -83,7 +78,7 @@ public class JointTest extends GameObject {
         BodyDef circleBodyDef = new BodyDef();
 
         circleBodyDef.type = BodyDef.BodyType.DynamicBody;
-        circleBodyDef.position.set(GameVariables.scale(getX()), GameVariables.scale(getY()-50));
+        circleBodyDef.position.set(GameVariables.scale(getInitialX()), GameVariables.scale(getInitialY() - 50));
 
         FixtureDef circleFixtureDef = new FixtureDef();
 
@@ -108,17 +103,11 @@ public class JointTest extends GameObject {
         rdef.bodyB = secondBody;
         rdef.collideConnected = true;
         rdef.localAnchorA.set(0,GameVariables.scale(-120));
-        rdef.localAnchorB.set(GameVariables.scale(-200),0);
+        rdef.localAnchorB.set(GameVariables.scale(-300), 0);
         getWorld().createJoint(rdef);
 
 
     }
-
-    //Impulses
-    Vector2 rightImpulse = new Vector2(0.1f, 0);
-    Vector2 leftImpulse = new Vector2(-0.1f, 0);
-    Vector2 upImpulse = new Vector2(0, 5f);
-    Vector2 downImpulse = new Vector2(0, -0.1f);
 
     @Override
     public void getInputs(float delta) {
@@ -146,6 +135,11 @@ public class JointTest extends GameObject {
             draw(getGame().getBatch());
             spriteB.draw(getGame().getBatch());
         }
+    }
+
+    @Override
+    public void afterDestroyedBody() {
+
     }
 
     public void onHitted(float damage){

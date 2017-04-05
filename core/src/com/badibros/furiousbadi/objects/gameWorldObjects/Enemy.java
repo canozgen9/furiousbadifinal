@@ -3,9 +3,9 @@ package com.badibros.furiousbadi.objects.gameWorldObjects;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
-import com.badibros.furiousbadi.worlds.Level1World;
+import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -50,7 +50,8 @@ public class Enemy extends GameObject {
     private boolean hitted = false;
     private boolean dead = false;
     private float stateTimer;
-    public Enemy(FuriousBadi game, World world, float x, float y,MenuPlayer player,float health,float damage, int type, float width, float height) {
+
+    public Enemy(FuriousBadi game, World world, float x, float y, MenuPlayer player, float health, float damage, int type, float width, float height) {
         super(game, world, x, y);
         this.player = player;
         this.experience = (int) health;
@@ -82,7 +83,7 @@ public class Enemy extends GameObject {
     @Override
     public void createBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(GameVariables.scale(getX()), GameVariables.scale(getY()));
+        bodyDef.position.set(GameVariables.scale(getInitialX()), GameVariables.scale(getInitialY()));
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         setB2d(getWorld().createBody(bodyDef));
@@ -122,14 +123,7 @@ public class Enemy extends GameObject {
         if(!hitted)
         setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
 
-        if(destroy && !destroyed){
-            for (int i = 0; i < (int) maxHealth / 100; i++) {
-                ((Level1World) ((MainMenuScreen) getGame().getScreen()).currentWorld).addObject(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
-            }
-            getWorld().destroyBody(getB2d());
-            destroyed = true;
-
-        }
+        checkDestroyFlag();
 
         if(playerDetected){
             Vector2 center = getB2d().getWorldCenter();
@@ -162,12 +156,18 @@ public class Enemy extends GameObject {
             TextureRegion textureRegion = (TextureRegion) disappearAnimation.getKeyFrame(stateTimer,false);
             setRegion(textureRegion);
             if(stateTimer>1f){
-                destroy = true;
                 dead = true;
             }
         }
         if(!dead)
             draw(getGame().getBatch());
+    }
+
+    @Override
+    public void afterDestroyedBody() {
+        for (int i = 0; i < (int) maxHealth / 100; i++) {
+            ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).addObject(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
+        }
     }
 
     public void onHitted(float damage){
@@ -176,16 +176,16 @@ public class Enemy extends GameObject {
             if(health<=0){
                 setSize(GameVariables.scale(width*3/2),GameVariables.scale(height*3/2));
                 setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
-                destroy = true;
+                destroyBody();
                 hitted = true;
                 player.experience += experience;
                 if (player.experience >= 1000) {
                     player.experience -= 1000;
                     player.level++;
-                    ((Level1World) ((MainMenuScreen) getGame().getScreen()).currentWorld).hud.levelUpTimer += 1;
+                    ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.levelUpTimer += 1;
                 }
-                ((Level1World) ((MainMenuScreen) getGame().getScreen()).currentWorld).hud.killTimer += 1;
-                ((Level1World) ((MainMenuScreen) getGame().getScreen()).currentWorld).hud.updateInfo(player);
+                ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.killTimer += 1;
+                ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.updateInfo(player);
             }
         }
     }

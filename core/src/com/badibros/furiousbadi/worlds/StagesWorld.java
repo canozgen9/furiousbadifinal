@@ -5,7 +5,7 @@ import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.Clickable;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,16 +19,16 @@ import java.util.ArrayList;
 public class StagesWorld extends GameWorld {
 
     //Objects
-    public MenuPlayer menuPlayer;
-    public Texture background;
-    public Texture header;
+    private MenuPlayer menuPlayer;
+    private Texture background;
+    private Texture header;
 
     private ArrayList<MenuButton> buttons;
 
 
     public StagesWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera) {
         super(game,viewport,gameCamera);
-        ((MainMenuScreen) game.getScreen()).gameCamera.zoom = 1;
+        ((MainScreen) game.getScreen()).gameCamera.zoom = 1;
     }
 
     @Override
@@ -51,19 +51,19 @@ public class StagesWorld extends GameWorld {
         MenuButton level1Button = new MenuButton(game, world, 500, 250, "img/mainmenu/buttons/level1.png", "img/mainmenu/buttons/level1_selected.png", new Clickable() {
             @Override
             public void onClick() {
-                ((MainMenuScreen)game.getScreen()).currentWorld = new Level1World(game,((MainMenuScreen) game.getScreen()).viewport,((MainMenuScreen)game.getScreen()).gameCamera);
+                ((MainScreen) game.getScreen()).currentWorld = new LevelWorld(game, ((MainScreen) game.getScreen()).viewport, ((MainScreen) game.getScreen()).gameCamera, 1);
             }
         });
         MenuButton level2Button = new MenuButton(game, world, 1000, 250, "img/mainmenu/buttons/level2.png", "img/mainmenu/buttons/level2_selected.png", new Clickable() {
             @Override
             public void onClick() {
-                ((MainMenuScreen)game.getScreen()).currentWorld = new StagesWorld(game,((MainMenuScreen) game.getScreen()).viewport,((MainMenuScreen)game.getScreen()).gameCamera);
+                ((MainScreen) game.getScreen()).currentWorld = new LevelWorld(game, ((MainScreen) game.getScreen()).viewport, ((MainScreen) game.getScreen()).gameCamera, 2);
             }
         });
         MenuButton backButton = new MenuButton(game, world, 1500, 250, "img/mainmenu/buttons/back_button.png", "img/mainmenu/buttons/back_button_selected.png", new Clickable() {
             @Override
             public void onClick() {
-                ((MainMenuScreen)game.getScreen()).currentWorld = new MainMenuWorld(game,((MainMenuScreen) game.getScreen()).viewport,((MainMenuScreen)game.getScreen()).gameCamera);
+                ((MainScreen) game.getScreen()).currentWorld = new MainMenuWorld(game, ((MainScreen) game.getScreen()).viewport, ((MainScreen) game.getScreen()).gameCamera);
             }
         });
 

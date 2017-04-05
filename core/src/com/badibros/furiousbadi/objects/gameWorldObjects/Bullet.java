@@ -30,7 +30,6 @@ public class Bullet extends GameObject {
 
     private MenuPlayer player;
 
-    private boolean destroy = false;
     private boolean destroyed = false;
     private boolean hitted = false;
     private boolean dead = false;
@@ -107,10 +106,7 @@ public class Bullet extends GameObject {
     @Override
     public void update(float delta) {
 
-        if(!destroyed && destroy){
-            getWorld().destroyBody(getB2d());
-            destroyed = true;
-        }
+        checkDestroyFlag();
 
         if(!hitted)
             setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
@@ -125,7 +121,6 @@ public class Bullet extends GameObject {
                 TextureRegion textureRegion = (TextureRegion) explodeAnimation.getKeyFrame(stateTimer,false);
                 setRegion(textureRegion);
                 if(stateTimer>.5f){
-                    destroy = true;
                     dead = true;
                 }
             }
@@ -133,10 +128,15 @@ public class Bullet extends GameObject {
             draw(getGame().getBatch());
     }
 
+    @Override
+    public void afterDestroyedBody() {
+
+    }
+
     public void onHitted(){
         setSize(GameVariables.scale(50),GameVariables.scale(50));
         setPosition(getB2d().getPosition().x- getWidth() / 2,getB2d().getPosition().y- getHeight()/2);
-        destroy = true;
+        destroyBody();
         hitted = true;
     }
 

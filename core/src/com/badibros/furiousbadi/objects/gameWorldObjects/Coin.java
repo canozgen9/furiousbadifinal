@@ -54,7 +54,7 @@ public class Coin extends GameObject {
     public void createBody() {
         BodyDef bodyDef = new BodyDef();
 
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(getInitialX(), getInitialY());
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.gravityScale = .5f;
@@ -97,6 +97,11 @@ public class Coin extends GameObject {
         setRegion(textureRegion);
         if (!destroyed)
             draw(getGame().getBatch());
+    }
+
+    @Override
+    public void afterDestroyedBody() {
+
     }
 
     public void onHitted() {

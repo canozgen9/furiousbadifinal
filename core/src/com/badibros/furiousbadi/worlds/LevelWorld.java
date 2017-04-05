@@ -5,9 +5,10 @@ import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Box;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
+import com.badibros.furiousbadi.objects.gameWorldObjects.JointTest;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
 import com.badibros.furiousbadi.screens.Hud;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -36,32 +37,52 @@ import static com.badibros.furiousbadi.utils.GameVariables.PPM;
  * Created by canozgen9 on 3/31/17.
  */
 
-public class Level1World extends GameWorld{
+public class LevelWorld extends GameWorld {
 
     public ArrayList<GameObject> gameObjects;
     public Hud hud;
+    //Level
+    int level;
     private MenuPlayer player;
     //Tiled map
     private TmxMapLoader mapLoader;
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer mapRenderer;
 
-    public Level1World(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera) {
+    public LevelWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera, int level) {
         super(game, viewport, gameCamera);
 
+        this.level = level;
 
-        world.setContactListener(new Level1WorldContactListener());
+        world.setContactListener(new LevelWorldContactListener());
 
-        ((MainMenuScreen) game.getScreen()).gameCamera.zoom = 1;
+        ((MainScreen) game.getScreen()).gameCamera.zoom = 1;
         //tiled map
         mapLoader = new TmxMapLoader();
-        tiledMap = mapLoader.load("levels/level1/map.tmx");
+        tiledMap = mapLoader.load("levels/level" + level + "/map.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/ PPM);
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fixtureDef = new FixtureDef();
         Body body;
+
+
+        //Finish Point
+        Rectangle finishRectangle = ((RectangleMapObject) tiledMap.getLayers().get(13).getObjects().get(0)).getRectangle();
+        BodyDef finishRectangleBodyDef = new BodyDef();
+        finishRectangleBodyDef.type = BodyDef.BodyType.StaticBody;
+        finishRectangleBodyDef.position.set((finishRectangle.getX() + finishRectangle.getWidth() / 2) / PPM, (finishRectangle.getY() + finishRectangle.getHeight() / 2) / PPM);
+        FixtureDef finishRectangleFixtureDef = new FixtureDef();
+        PolygonShape finishRectangleShape = new PolygonShape();
+        finishRectangleShape.setAsBox(finishRectangle.getWidth() / 2 / PPM, finishRectangle.getHeight() / 2 / PPM);
+        finishRectangleFixtureDef.shape = finishRectangleShape;
+        finishRectangleFixtureDef.filter.categoryBits = GameVariables.BIT_FINISH_AREA;
+        finishRectangleFixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER;
+        finishRectangleFixtureDef.isSensor = true;
+        world.createBody(finishRectangleBodyDef).createFixture(finishRectangleFixtureDef);
+
+
 
         //Ground
         for(MapObject mapObject : tiledMap.getLayers().get(1).getObjects()){
@@ -86,6 +107,11 @@ public class Level1World extends GameWorld{
         player = new MenuPlayer(game,world,(rectangle2.getX()+rectangle2.getWidth()/2),(rectangle2.getY()+rectangle2.getHeight()/2));
         player.gameWorld = this;
 
+
+        for (MapObject mapObject : tiledMap.getLayers().get(12).getObjects()) {
+            rectangle2 = ((RectangleMapObject) mapObject).getRectangle();
+            gameObjects.add(new JointTest(game, world, (rectangle2.getX() + rectangle2.getWidth() / 2), (rectangle2.getY() + rectangle2.getHeight() / 2)));
+        }
 
         for(MapObject mapObject : tiledMap.getLayers().get(2).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
@@ -192,5 +218,13 @@ public class Level1World extends GameWorld{
     @Override
     public void dispose() {
 
+    }
+
+    public void finishGame(int result) {
+        if (result == 1) {
+            hud.finishGame(1);
+        } else {
+
+        }
     }
 }

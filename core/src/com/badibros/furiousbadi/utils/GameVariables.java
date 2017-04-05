@@ -15,6 +15,7 @@ public class GameVariables {
     public static final int BIT_GAME_BOX = 128;
     public static final int BIT_GAME_PLAYER_BOTTOM_SENSOR = 256;
     public static final int BIT_GAME_COIN = 512;
+    public static final int BIT_FINISH_AREA = 1024;
     //PPM Works
     public static final float PPM = 100;
     //Aspect ratio

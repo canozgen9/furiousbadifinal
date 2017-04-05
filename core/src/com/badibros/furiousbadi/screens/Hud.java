@@ -17,13 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-/**
- * Created by canozgen9 on 4/2/17.
- */
-
 public class Hud {
     public float levelUpTimer = 0;
     public float killTimer = 0;
+    private BitmapFont font;
     private Stage stage;
     private Viewport viewport;
     private Label countDownLabel;
@@ -38,6 +35,7 @@ public class Hud {
     private Integer worldTimer;
     private float timeCount;
     private Integer score;
+    private float finishGameTimer = 5;
 
     public Hud(SpriteBatch sb) {
         this.batch = sb;
@@ -60,7 +58,7 @@ public class Hud {
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
-        BitmapFont font = generator.generateFont(parameter); // font size 12 pixels
+        font = generator.generateFont(parameter); // font size 12 pixels
         generator.dispose();
         countDownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(font, Color.WHITE));
         countDownLabel.getStyle().background = new SpriteDrawable(new Sprite(new Texture("spritesheets/enviroment/sphereHolder.png")));
@@ -121,7 +119,20 @@ public class Hud {
             batch.draw(killTexture, 50, 50, viewport.getScreenWidth() / 4, viewport.getScreenWidth() / 4 * 2 / 7);
         }
 
+        if (finishGameTimer >= 0) {
+            finishGameTimer -= delta;
+            font.draw(batch, "Succesfull!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
+        }
+
         batch.end();
+    }
+
+    public void finishGame(int result) {
+        if (result == 1) {
+            finishGameTimer = 5;
+        } else {
+
+        }
     }
 
 }

@@ -2,16 +2,16 @@ package com.badibros.furiousbadi.objects.mainMenuWorldObjects;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
+import com.badibros.furiousbadi.models.player.GunModel;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Bullet;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
-import com.badibros.furiousbadi.worlds.Level1World;
+import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_FINISH_AREA;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
@@ -36,9 +37,6 @@ public class MenuPlayer extends GameObject {
     public boolean isJumping = true;
     public boolean isCrouching = false;
     public float angle = 0;
-    private boolean isFiring = false;
-    private TextureRegion bowTexture = new TextureRegion(new Texture("spritesheets/player/bow.png"));
-    private Sprite bow = new Sprite();
     private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
     //Impulses
     private Vector2 rightImpulse = new Vector2(0.05f, 0);
@@ -60,6 +58,9 @@ public class MenuPlayer extends GameObject {
     private float stateTimer;
     private float cameraTimer = 0;
     private float bulletTimer = 0;
+
+    private GunModel gun;
+
     public MenuPlayer(FuriousBadi game, World world, float x, float y) {
         super(game, world, x, y);
         createBody();
@@ -101,16 +102,15 @@ public class MenuPlayer extends GameObject {
         //Set dimensions
         setBounds(0, 0, GameVariables.scale(60), GameVariables.scale(92));
 
-        bow.setBounds(0,0,GameVariables.scale(20),GameVariables.scale(100));
-        bow.setRegion(bowTexture);
-        bow.setOrigin(bow.getWidth()/2,bow.getHeight()/2);
+
+        gun = new GunModel(game, world, getB2d().getPosition().x, getB2d().getPosition().y, this, "spritesheets/player/bow.png");
 
     }
 
     @Override
     public void createBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(GameVariables.scale(getX()), GameVariables.scale(getY()));
+        bodyDef.position.set(GameVariables.scale(getInitialX()), GameVariables.scale(getInitialY()));
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         setB2d(getWorld().createBody(bodyDef));
@@ -122,7 +122,7 @@ public class MenuPlayer extends GameObject {
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
         fixtureDef.filter.categoryBits = GameVariables.BIT_MENUPLAYER;
-        fixtureDef.filter.maskBits = GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX;
+        fixtureDef.filter.maskBits = GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
         getB2d().createFixture(fixtureDef).setUserData(this);
         CircleShape shape = new CircleShape();
         shape.setRadius(GameVariables.scale(20));
@@ -160,8 +160,8 @@ public class MenuPlayer extends GameObject {
                     }
                     cameraTimer += delta;
                     if (cameraTimer >= 0.8) {
-                        if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
+                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
                 } else if (pointerX <= 2 * Gdx.graphics.getWidth() / 3) {
@@ -173,15 +173,15 @@ public class MenuPlayer extends GameObject {
                     }
                     cameraTimer += delta;
                     if (cameraTimer >= 0.8) {
-                        if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
+                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
                 }
             } else {
                 cameraTimer = 0;
-                if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom > 1) {
-                    ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom -= 0.005;
+                if (((MainScreen) getGame().getScreen()).gameCamera.zoom > 1) {
+                    ((MainScreen) getGame().getScreen()).gameCamera.zoom -= 0.005;
                 }
             }
         }
@@ -194,7 +194,7 @@ public class MenuPlayer extends GameObject {
                     isJumping = true;
                 }
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.O)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 isCrouching = true;
                 Filter filterData = getB2d().getFixtureList().get(1).getFilterData();
                 filterData.maskBits = 0;
@@ -212,21 +212,21 @@ public class MenuPlayer extends GameObject {
 
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 if(angle<15){
-                    angle+=1f;
+                    gun.angle += 1f;
                 }
             } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 if(angle>-15){
-                    angle-=1f;
+                    gun.angle -= 1f;
                 }
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                isFiring = true;
+                gun.isFiring = true;
                 if(bulletTimer == 0){
-                    ((Level1World)gameWorld).gameObjects.add(new Bullet(getGame(),getWorld(),0,0,this));
+                    ((LevelWorld) gameWorld).gameObjects.add(new Bullet(getGame(), getWorld(), 0, 0, this));
                 }else{
                     if(bulletTimer>0.5){
-                        ((Level1World)gameWorld).gameObjects.add(new Bullet(getGame(),getWorld(),0,0,this));
+                        ((LevelWorld) gameWorld).gameObjects.add(new Bullet(getGame(), getWorld(), 0, 0, this));
                         bulletTimer = 0;
                     }
                 }
@@ -235,37 +235,37 @@ public class MenuPlayer extends GameObject {
 
             }else{
                 bulletTimer = 0;
-                isFiring = false;
+                gun.isFiring = false;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                if(!isFiring){
+                if (!gun.isFiring) {
                     if (getB2d().getLinearVelocity().x >= -1.5) {
                         getB2d().applyLinearImpulse(leftImpulse, center, false);
                     }
                     cameraTimer += delta;
                     if (cameraTimer >= 1) {
-                        if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
+                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
                 }
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if(!isFiring){
+                if (!gun.isFiring) {
                     if (getB2d().getLinearVelocity().x <= 1.5) {
                         getB2d().applyLinearImpulse(rightImpulse, center, false);
                     }
                     cameraTimer += delta;
                     if (cameraTimer >= 0.8) {
-                        if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
+                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
                 }
             } else {
                 cameraTimer = 0;
-                if (((MainMenuScreen) getGame().getScreen()).gameCamera.zoom > 1) {
-                    ((MainMenuScreen) getGame().getScreen()).gameCamera.zoom -= 0.005;
+                if (((MainScreen) getGame().getScreen()).gameCamera.zoom > 1) {
+                    ((MainScreen) getGame().getScreen()).gameCamera.zoom -= 0.005;
                 }
             }
         }
@@ -284,7 +284,7 @@ public class MenuPlayer extends GameObject {
         }
 
         TextureRegion region;
-        if(isFiring){
+        if (gun.isFiring) {
             if(isCrouching){
                 if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f ) {
                     if(isCrouching){
@@ -336,29 +336,10 @@ public class MenuPlayer extends GameObject {
             runningRight = true;
         }
 
-        bow.setRegion(bowTexture);
-
-        if(runningRight){
-            bow.setBounds(0,0,GameVariables.scale(20),GameVariables.scale(100));
-            if(isCrouching){
-                bow.setPosition(getB2d().getPosition().x+GameVariables.scale(15),getB2d().getPosition().y-GameVariables.scale(40));
-            } else {
-                bow.setPosition(getB2d().getPosition().x+GameVariables.scale(15),getB2d().getPosition().y-GameVariables.scale(30));
-            }
-            bow.setRotation(angle);
-        } else {
-            bow.setBounds(0,0,-GameVariables.scale(20),GameVariables.scale(100));
-            if(isCrouching) {
-                bow.setPosition(getB2d().getPosition().x - GameVariables.scale(15), getB2d().getPosition().y - GameVariables.scale(40));
-            } else {
-                bow.setPosition(getB2d().getPosition().x-GameVariables.scale(15),getB2d().getPosition().y-GameVariables.scale(30));
-            }
-            bow.setRotation(-angle);
-        }
-
-
 
         setRegion(region);
+
+        gun.update(delta);
 
         if(getB2d().getLinearVelocity().x!=0){
             if(runningRight){
@@ -375,9 +356,12 @@ public class MenuPlayer extends GameObject {
     @Override
     public void render(float delta) {
             draw(getGame().getBatch());
-        if(isFiring){
-            bow.draw(getGame().getBatch());
-        }
+        gun.render(delta);
+    }
+
+    @Override
+    public void afterDestroyedBody() {
+
     }
 
 }

@@ -5,7 +5,7 @@ import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.Clickable;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
-import com.badibros.furiousbadi.screens.MainMenuScreen;
+import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -22,18 +22,16 @@ import java.util.ArrayList;
 public class CreditsWorld extends GameWorld {
 
     //Objects
-    public MenuPlayer menuPlayer;
-    public Texture background;
-    public Texture header;
-
+    private MenuPlayer menuPlayer;
+    private Texture background;
+    private Texture header;
+    private Texture canozgen;
+    private Texture furkannakip;
     private ArrayList<MenuButton> buttons;
-
-    Texture canozgen;
-    Texture furkannakip;
 
     public CreditsWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera) {
         super(game,viewport,gameCamera);
-        ((MainMenuScreen) game.getScreen()).gameCamera.zoom = 1;
+        ((MainScreen) game.getScreen()).gameCamera.zoom = 1;
     }
 
     @Override
@@ -60,7 +58,7 @@ public class CreditsWorld extends GameWorld {
         MenuButton back_button = new MenuButton(game, world, 500, 250, "img/mainmenu/buttons/back_button.png", "img/mainmenu/buttons/back_button_selected.png", new Clickable() {
             @Override
             public void onClick() {
-                ((MainMenuScreen)game.getScreen()).currentWorld = new MainMenuWorld(game,((MainMenuScreen) game.getScreen()).viewport,((MainMenuScreen)game.getScreen()).gameCamera);
+                ((MainScreen) game.getScreen()).currentWorld = new MainMenuWorld(game, ((MainScreen) game.getScreen()).viewport, ((MainScreen) game.getScreen()).gameCamera);
             }
         });
 
