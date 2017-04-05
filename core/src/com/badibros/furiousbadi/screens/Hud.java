@@ -35,10 +35,13 @@ public class Hud {
     private Integer worldTimer;
     private float timeCount;
     private Integer score;
-    private float finishGameTimer = 5;
+    private float finishGameTimer = 0;
+    private float gameOverTimer = 0;
+    private MenuPlayer player;
 
-    public Hud(SpriteBatch sb) {
+    public Hud(SpriteBatch sb, MenuPlayer player) {
         this.batch = sb;
+        this.player = player;
         worldTimer = 300;
         timeCount = 0;
         score = 0;
@@ -109,19 +112,28 @@ public class Hud {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         stage.draw();
         batch.begin();
-        if (levelUpTimer >= 0) {
+        font.draw(batch, player.health + "", 50, 50);
+        if (levelUpTimer > 0) {
             levelUpTimer -= delta;
             batch.draw(levelUpTexture, viewport.getScreenWidth() / 2 - levelUpTexture.getWidth() / 2, viewport.getScreenHeight() / 2 - levelUpTexture.getHeight() / 2);
         }
 
-        if (killTimer >= 0) {
+        if (killTimer > 0) {
             killTimer -= delta;
             batch.draw(killTexture, 50, 50, viewport.getScreenWidth() / 4, viewport.getScreenWidth() / 4 * 2 / 7);
         }
 
-        if (finishGameTimer >= 0) {
+        if (finishGameTimer > 0) {
             finishGameTimer -= delta;
             font.draw(batch, "Succesfull!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
+        }
+
+        if (gameOverTimer > 0) {
+            gameOverTimer -= delta;
+            font.draw(batch, "Game Over!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
+        }
+        if (gameOverTimer < 0) {
+            System.exit(1);
         }
 
         batch.end();
@@ -129,9 +141,9 @@ public class Hud {
 
     public void finishGame(int result) {
         if (result == 1) {
-            finishGameTimer = 5;
+            finishGameTimer = 1;
         } else {
-
+            gameOverTimer = 1;
         }
     }
 

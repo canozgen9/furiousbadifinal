@@ -27,10 +27,10 @@ import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
 public class Enemy extends GameObject {
 
     public boolean playerDetected = false;
+    public float damage = 50f;
     private int experience;
     private float health;
     private float maxHealth;
-    private float damage = 50f;
     private boolean runningRight = true;
     private TextureRegion textureRegion;
     private float width;

@@ -81,7 +81,15 @@ public class LevelWorldContactListener implements ContactListener {
                 } else {
                     ((LevelWorld) ((MenuPlayer) fB.getUserData()).gameWorld).finishGame(1);
                 }
+
                 break;
+            case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_ENEMY:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_MENUPLAYER) {
+                    ((MenuPlayer) fA.getUserData()).onHitted(((Enemy) fB.getUserData()).damage);
+                } else {
+                    ((MenuPlayer) fB.getUserData()).onHitted(((Enemy) fA.getUserData()).damage);
+                }
+
             default:
 
         }

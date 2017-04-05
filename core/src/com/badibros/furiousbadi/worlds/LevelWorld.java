@@ -67,7 +67,6 @@ public class LevelWorld extends GameWorld {
         FixtureDef fixtureDef = new FixtureDef();
         Body body;
 
-
         //Finish Point
         Rectangle finishRectangle = ((RectangleMapObject) tiledMap.getLayers().get(13).getObjects().get(0)).getRectangle();
         BodyDef finishRectangleBodyDef = new BodyDef();
@@ -81,8 +80,6 @@ public class LevelWorld extends GameWorld {
         finishRectangleFixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER;
         finishRectangleFixtureDef.isSensor = true;
         world.createBody(finishRectangleBodyDef).createFixture(finishRectangleFixtureDef);
-
-
 
         //Ground
         for(MapObject mapObject : tiledMap.getLayers().get(1).getObjects()){
@@ -156,7 +153,7 @@ public class LevelWorld extends GameWorld {
         }
 
 
-        hud = new Hud(game.getBatch());
+        hud = new Hud(game.getBatch(), player);
 
     }
 
@@ -198,13 +195,11 @@ public class LevelWorld extends GameWorld {
 
     @Override
     public void render(float delta) {
-
         game.getBatch().setProjectionMatrix(gameCamera.combined);
 
         mapRenderer.render();
         game.getBatch().begin();
         player.render(delta);
-
 
         for(GameObject gameObject : gameObjects) gameObject.render(delta);
 
@@ -224,7 +219,7 @@ public class LevelWorld extends GameWorld {
         if (result == 1) {
             hud.finishGame(1);
         } else {
-
+            hud.finishGame(0);
         }
     }
 }

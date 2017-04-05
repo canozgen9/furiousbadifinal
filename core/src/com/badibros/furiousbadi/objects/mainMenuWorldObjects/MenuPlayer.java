@@ -32,6 +32,7 @@ public class MenuPlayer extends GameObject {
 
     public int experience = 1;
     public int level = 1;
+    public float health = 1000;
     public boolean runningRight = true;
     public boolean isFootContact = false;
     public boolean isJumping = true;
@@ -336,7 +337,6 @@ public class MenuPlayer extends GameObject {
             runningRight = true;
         }
 
-
         setRegion(region);
 
         gun.update(delta);
@@ -355,13 +355,20 @@ public class MenuPlayer extends GameObject {
 
     @Override
     public void render(float delta) {
-            draw(getGame().getBatch());
+        draw(getGame().getBatch());
         gun.render(delta);
     }
 
     @Override
     public void afterDestroyedBody() {
 
+    }
+
+    public void onHitted(float damage) {
+        health -= damage;
+        if (health <= 0) {
+            ((LevelWorld) gameWorld).finishGame(0);
+        }
     }
 
 }
