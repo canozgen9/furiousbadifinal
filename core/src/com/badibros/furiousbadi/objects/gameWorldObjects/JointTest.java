@@ -24,7 +24,7 @@ public class JointTest extends GameObject {
 
     public float health = 1000f;
     public boolean runningRight = true;
-    Player player;
+    com.badibros.furiousbadi.objects.gameWorldObjects.player.Player player;
     TextureRegion textureA = new TextureRegion(new Texture("spritesheets/enviroment/sphereHolder.png"));
     TextureRegion textureB = new TextureRegion(new Texture("spritesheets/enviroment/sphere.png"));
     Sprite spriteB = new Sprite();
@@ -67,7 +67,7 @@ public class JointTest extends GameObject {
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 0.3f;
         fixtureDef.filter.categoryBits = GameVariables.BIT_GAME_GROUND;
-        fixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        fixtureDef.filter.maskBits = GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
 
         getB2d().createFixture(fixtureDef).setUserData(this);
 
@@ -89,7 +89,7 @@ public class JointTest extends GameObject {
         circleFixtureDef.friction = 1f;
         circleFixtureDef.restitution = 0.3f;
         circleFixtureDef.filter.categoryBits = GameVariables.BIT_GAME_GROUND;
-        circleFixtureDef.filter.maskBits = BIT_GAME_GROUND | GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        circleFixtureDef.filter.maskBits = BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
 
 
         secondBody = getWorld().createBody(circleBodyDef);

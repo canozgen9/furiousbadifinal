@@ -1,9 +1,9 @@
 package com.badibros.furiousbadi.screens;
 
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.Bow;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.MissileLauncher;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.SpaceGun;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.Bow;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.MissileLauncher;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.SpaceGun;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Gdx;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,7 +25,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Hud {
     public float levelUpTimer = 0;
     public float killTimer = 0;
+    public boolean willPause = false;
+    public boolean paused = false;
+    ShapeRenderer shapeRenderer;
     private BitmapFont font;
+    private BitmapFont smallFont;
     private Stage stage;
     private Viewport viewport;
     private Label countDownLabel;
@@ -36,6 +41,7 @@ public class Hud {
     private Texture killTexture;
     private Texture levelUpTexture;
     private Texture bleedingTexture;
+    private Texture hud;
     private SpriteBatch batch;
     private Integer worldTimer;
     private float timeCount;
@@ -68,6 +74,8 @@ public class Hud {
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
         font = generator.generateFont(parameter); // font size 12 pixels
+        parameter.size = 16;
+        smallFont = generator.generateFont(parameter); // font size 12 pixels
         generator.dispose();
         countDownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(font, Color.WHITE));
         countDownLabel.getStyle().background = new SpriteDrawable(new Sprite(new Texture("spritesheets/enviroment/sphereHolder.png")));
@@ -86,6 +94,10 @@ public class Hud {
         levelUpTexture = new Texture("img/levelup.png");
         killTexture = new Texture("img/killed.png");
         bleedingTexture = new Texture("spritesheets/bleeding.png");
+        hud = new Texture("img/hud.png");
+
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
 
         table.add(nameLabel).expandX().padTop(10);
         table.add(worldLabel).expandX().padTop(10);
@@ -117,14 +129,31 @@ public class Hud {
 
     public void render(float delta) {
         batch.setProjectionMatrix(viewport.getCamera().combined);
-        stage.draw();
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //NAME
+        shapeRenderer.setColor(Color.valueOf("212121"));
+        shapeRenderer.rect(80, GameVariables.HEIGHT - 52, 180, 26);
+        //HEALTH
+        shapeRenderer.setColor(Color.valueOf("b71c1c"));
+        shapeRenderer.rect(80, GameVariables.HEIGHT - 74, 180, 24);
+        shapeRenderer.setColor(Color.valueOf("f44336"));
+        shapeRenderer.rect(80, GameVariables.HEIGHT - 74, 180 * player.health / player.maxHealth, 24);
+        //EXP
+        shapeRenderer.setColor(Color.valueOf("f57f17"));
+        shapeRenderer.rect(80, GameVariables.HEIGHT - 86, 160, 14);
+        shapeRenderer.setColor(Color.valueOf("ffc107"));
+        shapeRenderer.rect(80, GameVariables.HEIGHT - 86, 160 * player.experience / 1000, 14);
+        shapeRenderer.end();
+        //stage.draw();
         batch.begin();
-        font.draw(batch, player.health + "", 50, 50);
+        font.draw(batch, "Stage " + ((LevelWorld) player.gameWorld).level + "", GameVariables.WIDTH - 120, GameVariables.HEIGHT - 15);
+        batch.draw(hud, 10, GameVariables.HEIGHT - 100);
         String gunName = "";
-        if (player.selectedGun instanceof Bow) gunName = "Bow";
+        if (player.selectedGun instanceof Bow) gunName = "EnemyBow";
         else if (player.selectedGun instanceof MissileLauncher) gunName = "Missile Launcher";
         else if (player.selectedGun instanceof SpaceGun) gunName = "Space Gun";
-        font.draw(batch, gunName, viewport.getScreenWidth() - 250, 50);
+        font.draw(batch, gunName, 15, 45);
         if (levelUpTimer > 0) {
             levelUpTimer -= delta;
             batch.draw(levelUpTexture, viewport.getScreenWidth() / 2 - levelUpTexture.getWidth() / 2, viewport.getScreenHeight() / 2 - levelUpTexture.getHeight() / 2);
@@ -149,14 +178,21 @@ public class Hud {
             font.draw(batch, "Game Over!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         }
         if (gameOverTimer < 0) {
-            System.exit(1);
+            ((MainScreen) player.getGame().getScreen()).currentWorld = new LevelWorld(player.getGame(), ((MainScreen) player.getGame().getScreen()).viewport, ((MainScreen) player.getGame().getScreen()).gameCamera, ((LevelWorld) player.gameWorld).level);
         }
 
         if (bleedingTimer > 0) {
             bleedingTimer -= delta;
             batch.draw(bleedingTexture, 0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
         }
-
+        font.draw(batch, player.level + "", 53, GameVariables.HEIGHT - 45);
+        if (willPause) {
+            font.draw(batch, "PAUSED", 450, 500);
+            if (!paused) {
+                ((LevelWorld) player.gameWorld).running = (!((LevelWorld) player.gameWorld).running);
+                paused = true;
+            }
+        }
         batch.end();
     }
 
@@ -170,6 +206,10 @@ public class Hud {
 
     public void addBleedingTimer(float time) {
         bleedingTimer += time;
+    }
+
+    public void pause() {
+        willPause = true;
     }
 
 }

@@ -3,10 +3,10 @@ package com.badibros.furiousbadi.worlds;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.models.GameWorld;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Box;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.JointTest;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.destroyables.Box;
+import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.FiringEnemy;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.screens.Hud;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_COIN;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.PPM;
 
@@ -39,10 +40,12 @@ import static com.badibros.furiousbadi.utils.GameVariables.PPM;
 
 public class LevelWorld extends GameWorld {
 
+    public boolean running;
     public ArrayList<GameObject> gameObjects;
+    public ArrayList<GameObject> gameObjectsToAdd;
     public Hud hud;
     //Level
-    int level;
+    public int level;
     private Player player;
     //Tiled map
     private TmxMapLoader mapLoader;
@@ -77,7 +80,7 @@ public class LevelWorld extends GameWorld {
         finishRectangleShape.setAsBox(finishRectangle.getWidth() / 2 / PPM, finishRectangle.getHeight() / 2 / PPM);
         finishRectangleFixtureDef.shape = finishRectangleShape;
         finishRectangleFixtureDef.filter.categoryBits = GameVariables.BIT_FINISH_AREA;
-        finishRectangleFixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER;
+        finishRectangleFixtureDef.filter.maskBits = GameVariables.BIT_PLAYER;
         finishRectangleFixtureDef.isSensor = true;
         world.createBody(finishRectangleBodyDef).createFixture(finishRectangleFixtureDef);
 
@@ -94,12 +97,14 @@ public class LevelWorld extends GameWorld {
             fixtureDef.shape = shape;
 
             fixtureDef.filter.categoryBits = GameVariables.BIT_GAME_GROUND;
-            fixtureDef.filter.maskBits = BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+            fixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
             body.createFixture(fixtureDef);
 
         }
 
         gameObjects = new ArrayList<GameObject>();
+        gameObjectsToAdd = new ArrayList<GameObject>();
+
         Rectangle rectangle2 = ((RectangleMapObject) tiledMap.getLayers().get(11).getObjects().get(0)).getRectangle();
         player = new Player(game, world, (rectangle2.getX() + rectangle2.getWidth() / 2), (rectangle2.getY() + rectangle2.getHeight() / 2));
         player.gameWorld = this;
@@ -112,27 +117,27 @@ public class LevelWorld extends GameWorld {
 
         for(MapObject mapObject : tiledMap.getLayers().get(2).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
-            gameObjects.add(new Enemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 200, 50, 1, 70, 70));
+            gameObjects.add(new FiringEnemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 200, 50, "green"));
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get(3).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
-            gameObjects.add(new Enemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 300, 50, 2, 80, 80));
+            gameObjects.add(new FiringEnemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 300, 50, "red"));
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get(4).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
-            gameObjects.add(new Enemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 400, 50, 3, 90, 90));
+            gameObjects.add(new FiringEnemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 400, 50, "blue"));
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get(5).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
-            gameObjects.add(new Enemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 500, 50, 4, 100, 100));
+            gameObjects.add(new FiringEnemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 500, 50, "green"));
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get(6).getObjects()){
             Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
-            gameObjects.add(new Enemy(game,world,(rectangle.getX()+rectangle.getWidth()/2),(rectangle.getY()+rectangle.getHeight()/2),player,1000,50,5,200,200));
+            gameObjects.add(new FiringEnemy(game, world, (rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2), player, 1000, 50, "red"));
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get(7).getObjects()){
@@ -155,6 +160,10 @@ public class LevelWorld extends GameWorld {
 
         hud = new Hud(game.getBatch(), player);
         ((MainScreen) game.getScreen()).currentWorld = this;
+
+
+        gameObjects.add(new FiringEnemy(game, world, player.getInitialX() + 500, player.getInitialY() + 300, player, 400, 50, "red"));
+        running = true;
     }
 
     @Override
@@ -162,18 +171,35 @@ public class LevelWorld extends GameWorld {
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
             FuriousBadi.DEBUGGING = !FuriousBadi.DEBUGGING;
         }
+        if (running) {
         player.getInputs(delta);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (hud.paused) {
+                hud.paused = false;
+                hud.willPause = false;
+                running = true;
+            } else {
+                hud.pause();
+            }
+        }
     }
 
     @Override
     public void update(float delta) {
-        world.step(1 / 60f, 6, 2);
-        mapRenderer.setView(gameCamera);
-        player.update(delta);
-        updateGameCamera(delta);
-        hud.update(delta);
-        for(GameObject gameObject : gameObjects) gameObject.update(delta);
+        if (running) {
+            for (GameObject g : gameObjectsToAdd) {
+                gameObjects.add(g);
+            }
+            gameObjectsToAdd.clear();
 
+            world.step(1 / 60f, 6, 2);
+            mapRenderer.setView(gameCamera);
+            player.update(delta);
+            updateGameCamera(delta);
+            hud.update(delta);
+            for (GameObject gameObject : gameObjects) gameObject.update(delta);
+        }
     }
 
     public void addObject(GameObject o) {
@@ -188,9 +214,11 @@ public class LevelWorld extends GameWorld {
 
     @Override
     public void updateGameCamera(float delta) {
-        gameCamera.position.x=Math.max(gameCamera.position.x+(player.getB2d().getPosition().x-gameCamera.position.x)*.05f,gameCamera.viewportWidth/2+GameVariables.scale(40));
-        gameCamera.position.y=Math.max(gameCamera.position.y+(player.getB2d().getPosition().y-gameCamera.position.y)*.05f,gameCamera.viewportHeight/2+GameVariables.scale(40));
-        gameCamera.update();
+        if (running) {
+            gameCamera.position.x = Math.max(gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f, gameCamera.viewportWidth / 2 + GameVariables.scale(40));
+            gameCamera.position.y = Math.max(gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f, gameCamera.viewportHeight / 2 + GameVariables.scale(40));
+            gameCamera.update();
+        }
     }
 
     @Override

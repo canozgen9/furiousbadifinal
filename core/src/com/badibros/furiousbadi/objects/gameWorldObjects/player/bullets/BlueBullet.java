@@ -1,4 +1,4 @@
-package com.badibros.furiousbadi.objects.gameWorldObjects.bullets;
+package com.badibros.furiousbadi.objects.gameWorldObjects.player.bullets;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.player.BulletModel;

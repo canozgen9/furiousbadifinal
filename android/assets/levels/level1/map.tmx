@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="500" height="100" tilewidth="32" tileheight="32" nextobjectid="231">
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="500" height="100" tilewidth="32" tileheight="32" nextobjectid="233">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="16">
   <image source="tileset.png" width="128" height="128"/>
  </tileset>
@@ -40,8 +40,8 @@
   <object id="183" x="3840" y="2016" width="160" height="32"/>
  </objectgroup>
  <objectgroup name="enemy1">
-  <object id="185" x="2529" y="2037" width="13" height="14"/>
   <object id="186" x="3047" y="1078" width="13" height="15"/>
+  <object id="231" x="2665" y="2042"/>
  </objectgroup>
  <objectgroup name="enemy2">
   <object id="187" x="2155" y="1070" width="19" height="20"/>
@@ -60,19 +60,11 @@
   <object id="204" x="1733" y="1081"/>
   <object id="205" x="1366" y="965"/>
   <object id="206" x="1392" y="594"/>
-  <object id="207" x="2029" y="2129"/>
-  <object id="208" x="2298" y="2103"/>
-  <object id="209" x="2186" y="2006"/>
  </objectgroup>
  <objectgroup name="greenbox">
   <object id="191" x="3268" y="1105"/>
   <object id="196" x="3493" y="1724"/>
   <object id="199" x="3067" y="2146"/>
-  <object id="210" x="2272" y="1971"/>
-  <object id="211" x="2072" y="1990"/>
-  <object id="212" x="2243" y="2097"/>
-  <object id="213" x="2146" y="2088"/>
-  <object id="214" x="2456" y="1927"/>
  </objectgroup>
  <objectgroup name="yellowbox">
   <object id="192" x="3248" y="1066"/>
@@ -80,18 +72,9 @@
   <object id="195" x="3461" y="1726"/>
   <object id="197" x="3480" y="1686"/>
   <object id="198" x="2939" y="2142"/>
-  <object id="215" x="1970" y="1924"/>
-  <object id="216" x="2226" y="1908"/>
-  <object id="217" x="2339" y="1903"/>
-  <object id="218" x="2432" y="2002"/>
  </objectgroup>
  <objectgroup name="bluebox">
   <object id="193" x="3205" y="1110"/>
-  <object id="219" x="2092" y="1832"/>
-  <object id="220" x="2390" y="1795"/>
-  <object id="221" x="2600" y="1814"/>
-  <object id="222" x="2265" y="1803"/>
-  <object id="223" x="2592" y="1963"/>
   <object id="224" x="3565" y="2055"/>
   <object id="225" x="3730" y="2105"/>
   <object id="226" x="3405" y="2094"/>
@@ -101,7 +84,7 @@
   <object id="230" x="1179" y="1114"/>
  </objectgroup>
  <objectgroup name="player">
-  <object id="184" x="1837" y="2036" width="17" height="16"/>
+  <object id="232" x="1725" y="2068" width="16" height="15"/>
  </objectgroup>
  <objectgroup name="joint"/>
  <objectgroup name="finish">

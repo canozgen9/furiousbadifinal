@@ -44,7 +44,7 @@ public abstract class GameWorld {
 
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = GameVariables.BIT_MENUWALLS;
-        fixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        fixtureDef.filter.maskBits = GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
 
         pBody.createFixture(fixtureDef);
 

@@ -2,7 +2,7 @@ package com.badibros.furiousbadi.models.player;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;

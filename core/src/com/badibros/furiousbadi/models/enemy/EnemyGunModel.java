@@ -1,8 +1,9 @@
-package com.badibros.furiousbadi.models.player;
+package com.badibros.furiousbadi.models.enemy;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
+import com.badibros.furiousbadi.models.player.BulletModel;
+import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.FiringEnemy;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class EnemyGunModel extends GameObject {
 
-    public Enemy enemy;
+    public FiringEnemy enemy;
 
     public boolean isFiring = false;
     public boolean isFacingRight = false;
@@ -27,14 +28,14 @@ public class EnemyGunModel extends GameObject {
     private float standingXOffset;
     private float standingYOffset;
 
-    public EnemyGunModel(FuriousBadi game, World world, float x, float y, Enemy enemy, String texturePath) {
+    public EnemyGunModel(FuriousBadi game, World world, float x, float y, FiringEnemy enemy, String texturePath) {
         super(game, world, x, y);
         this.enemy = enemy;
         isFacingRight = enemy.runningRight;
         gunTexture = new Texture(texturePath);
     }
 
-    public void setPosition(float standingXOffset, float standingYOffset) {
+    public void setGunPosition(float standingXOffset, float standingYOffset) {
         this.standingXOffset = standingXOffset;
         this.standingYOffset = standingYOffset;
     }
@@ -80,17 +81,28 @@ public class EnemyGunModel extends GameObject {
             setPosition(enemy.getB2d().getPosition().x - GameVariables.scale(standingXOffset), enemy.getB2d().getPosition().y + GameVariables.scale(standingYOffset));
         }
         setRegion(getTexture());
+
+        if (enemy.playerDetected) {
+            bulletTimer += delta;
+            if (bulletTimer > 3) {
+                fire();
+                bulletTimer = 0;
+            }
+        }
+
     }
 
     @Override
     public void render(float delta) {
-        if (isFiring) {
-            draw(getGame().getBatch());
-        }
+        draw(getGame().getBatch());
     }
 
     @Override
     public void afterDestroyedBody() {
+
+    }
+
+    public void fire() {
 
     }
 }

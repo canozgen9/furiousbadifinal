@@ -1,4 +1,4 @@
-package com.badibros.furiousbadi.objects.gameWorldObjects;
+package com.badibros.furiousbadi.objects.gameWorldObjects.destroyables;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
@@ -15,7 +15,7 @@ import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_PLAYER;
 
 public class Box extends GameObject {
 
@@ -48,7 +48,7 @@ public class Box extends GameObject {
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 0.3f;
         fixtureDef.filter.categoryBits = BIT_GAME_BOX;
-        fixtureDef.filter.maskBits = BIT_MENUPLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        fixtureDef.filter.maskBits = BIT_PLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
         getB2d().createFixture(fixtureDef).setUserData(this);
 
         shape.dispose();

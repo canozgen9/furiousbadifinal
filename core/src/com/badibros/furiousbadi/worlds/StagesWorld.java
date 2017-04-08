@@ -2,7 +2,7 @@ package com.badibros.furiousbadi.worlds;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameWorld;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.Clickable;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
 import com.badibros.furiousbadi.screens.MainScreen;

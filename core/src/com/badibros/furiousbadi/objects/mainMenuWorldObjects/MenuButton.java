@@ -50,7 +50,7 @@ public class MenuButton extends GameObject{
         fixtureDef.density = 1.0f;
         fixtureDef.friction = 0.1f;
         fixtureDef.filter.categoryBits = GameVariables.BIT_MENUBUTTON;
-        fixtureDef.filter.maskBits = GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        fixtureDef.filter.maskBits = GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
         getB2d().createFixture(fixtureDef).setUserData(this);
         shape.dispose();
     }

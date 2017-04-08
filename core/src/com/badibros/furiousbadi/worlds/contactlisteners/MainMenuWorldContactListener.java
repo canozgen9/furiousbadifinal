@@ -1,6 +1,6 @@
 package com.badibros.furiousbadi.worlds.contactlisteners;
 
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +32,7 @@ public class MainMenuWorldContactListener implements ContactListener {
                     ((Player) fB.getUserData()).isJumping = false;
                 }
                 break;
-            case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_MENUBUTTON:
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_MENUBUTTON:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_MENUBUTTON){
                     ((MenuButton) fA.getUserData()).hitted();
                 }else{

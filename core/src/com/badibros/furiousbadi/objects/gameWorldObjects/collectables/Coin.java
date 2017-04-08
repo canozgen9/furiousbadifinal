@@ -1,4 +1,4 @@
-package com.badibros.furiousbadi.objects.gameWorldObjects;
+package com.badibros.furiousbadi.objects.gameWorldObjects.collectables;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_COIN;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUPLAYER;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_PLAYER;
 
 public class Coin extends GameObject {
 
@@ -68,7 +68,7 @@ public class Coin extends GameObject {
         fixtureDef.friction = 0.1f;
         fixtureDef.restitution = .3f;
         fixtureDef.filter.categoryBits = BIT_GAME_COIN;
-        fixtureDef.filter.maskBits = BIT_GAME_GROUND | BIT_MENUPLAYER | BIT_GAME_COIN;
+        fixtureDef.filter.maskBits = BIT_GAME_GROUND | BIT_PLAYER | BIT_GAME_COIN;
         getB2d().createFixture(fixtureDef).setUserData(this);
         shape.dispose();
     }

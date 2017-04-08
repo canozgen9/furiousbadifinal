@@ -5,7 +5,7 @@ public class GameVariables {
     //Screen width and height
     public static final int WIDTH = 1024;
     //Collision bits
-    public static final int BIT_MENUPLAYER = 1;
+    public static final int BIT_PLAYER = 1;
     public static final int BIT_MENUBUTTON = 2;
     public static final int BIT_MENUWALLS = 4;
     public static final int BIT_GAME_GROUND = 8;
@@ -16,6 +16,7 @@ public class GameVariables {
     public static final int BIT_GAME_PLAYER_BOTTOM_SENSOR = 256;
     public static final int BIT_GAME_COIN = 512;
     public static final int BIT_FINISH_AREA = 1024;
+    public static final int BIT_GAME_ENEMY_BULLET = 2048;
     //PPM Works
     public static final float PPM = 100;
     //Aspect ratio

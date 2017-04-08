@@ -1,11 +1,11 @@
-package com.badibros.furiousbadi.objects.gameWorldObjects;
+package com.badibros.furiousbadi.objects.gameWorldObjects.player;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.models.player.GunModel;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.Bow;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.MissileLauncher;
-import com.badibros.furiousbadi.objects.gameWorldObjects.guns.SpaceGun;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.Bow;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.MissileLauncher;
+import com.badibros.furiousbadi.objects.gameWorldObjects.player.guns.SpaceGun;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_FINISH_AREA;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
 
 public class Player extends GameObject {
@@ -37,6 +38,7 @@ public class Player extends GameObject {
     public int experience = 1;
     public int level = 1;
     public float health = 1000;
+    public float maxHealth = 1000;
     public boolean runningRight = true;
     public boolean isFootContact = false;
     public boolean isJumping = true;
@@ -91,7 +93,7 @@ public class Player extends GameObject {
             crouchingFrames.add(new TextureRegion(crouchingTextureAtlas.findRegion("c" + i), 0, 0, 250, 400));
         }
 
-        playerCrouching = new Animation(0.1f,crouchingFrames);
+        playerCrouching = new Animation(0.1f, crouchingFrames);
         standingWithCrouching = new TextureRegion(crouchingTextureAtlas.findRegion("c0"), 0, 0, 250, 400);
 
         //Others
@@ -103,7 +105,7 @@ public class Player extends GameObject {
         setRegion(standingFrame);
 
         //Set dimensions
-        setBounds(0, 0, GameVariables.scale(60), GameVariables.scale(92));
+        setSize(GameVariables.scale(60), GameVariables.scale(92));
 
         guns = new ArrayList<GunModel>();
 
@@ -128,8 +130,8 @@ public class Player extends GameObject {
         fixtureDef.density = 1f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
-        fixtureDef.filter.categoryBits = GameVariables.BIT_MENUPLAYER;
-        fixtureDef.filter.maskBits = GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
+        fixtureDef.filter.categoryBits = GameVariables.BIT_PLAYER;
+        fixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
         getB2d().createFixture(fixtureDef).setUserData(this);
         CircleShape shape = new CircleShape();
         shape.setRadius(GameVariables.scale(20));
@@ -140,7 +142,7 @@ public class Player extends GameObject {
         FixtureDef bottomSensor = new FixtureDef();
 
         PolygonShape shape1 = new PolygonShape();
-        shape1.setAsBox(GameVariables.scale(10),GameVariables.scale(5),new Vector2(GameVariables.scale(0),GameVariables.scale(-25)),0);
+        shape1.setAsBox(GameVariables.scale(10), GameVariables.scale(5), new Vector2(GameVariables.scale(0), GameVariables.scale(-25)), 0);
         bottomSensor.isSensor = true;
         bottomSensor.shape = shape1;
         bottomSensor.filter.categoryBits = GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
@@ -196,7 +198,7 @@ public class Player extends GameObject {
         if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-                if(!isJumping&&!isCrouching){
+                if (!isJumping && !isCrouching) {
                     getB2d().applyForce(upImpulse, center, false);
                     isJumping = true;
                 }
@@ -207,7 +209,7 @@ public class Player extends GameObject {
                 filterData.maskBits = 0;
                 getB2d().getFixtureList().get(1).setFilterData(filterData);
 
-            }else{
+            } else {
                 isCrouching = false;
                 Filter filterData = getB2d().getFixtureList().get(1).getFilterData();
                 filterData.maskBits = maskBits;
@@ -229,26 +231,26 @@ public class Player extends GameObject {
             }
             selectedGun.getInputs(delta);
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    if (getB2d().getLinearVelocity().x >= -1.5) {
-                        getB2d().applyLinearImpulse(leftImpulse, center, false);
+                if (getB2d().getLinearVelocity().x >= -1.5) {
+                    getB2d().applyLinearImpulse(leftImpulse, center, false);
+                }
+                cameraTimer += delta;
+                if (cameraTimer >= 1) {
+                    if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                        ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                     }
-                    cameraTimer += delta;
-                    if (cameraTimer >= 1) {
-                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
-                        }
-                    }
+                }
 
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    if (getB2d().getLinearVelocity().x <= 1.5) {
-                        getB2d().applyLinearImpulse(rightImpulse, center, false);
+                if (getB2d().getLinearVelocity().x <= 1.5) {
+                    getB2d().applyLinearImpulse(rightImpulse, center, false);
+                }
+                cameraTimer += delta;
+                if (cameraTimer >= 0.8) {
+                    if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
+                        ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                     }
-                    cameraTimer += delta;
-                    if (cameraTimer >= 0.8) {
-                        if (((MainScreen) getGame().getScreen()).gameCamera.zoom < 1.2f) {
-                            ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
-                        }
-                    }
+                }
 
             } else {
                 cameraTimer = 0;
@@ -272,30 +274,30 @@ public class Player extends GameObject {
         }
 
         TextureRegion region;
-            if(isFootContact){
-                if(isCrouching){
-                    if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f ) {
-                        if(isCrouching){
-                            region = standingWithCrouching;
-                        }else{
-                            region = jumpingFrame;
-                        }
+        if (isFootContact) {
+            if (isCrouching) {
+                if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f) {
+                    if (isCrouching) {
+                        region = standingWithCrouching;
                     } else {
-                        region = (TextureRegion) playerCrouching.getKeyFrame(stateTimer, true);
+                        region = jumpingFrame;
                     }
-                }else{
-                    if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f ) {
-                        region = standingFrame;
-                    } else {
-                        region = (TextureRegion) playerRunning.getKeyFrame(stateTimer, true);
-                    }
+                } else {
+                    region = (TextureRegion) playerCrouching.getKeyFrame(stateTimer, true);
                 }
             } else {
-                if(isCrouching){
-                    region = standingWithCrouching;
-                }else{
-                    region = jumpingFrame;
+                if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f) {
+                    region = standingFrame;
+                } else {
+                    region = (TextureRegion) playerRunning.getKeyFrame(stateTimer, true);
                 }
+            }
+        } else {
+            if (isCrouching) {
+                region = standingWithCrouching;
+            } else {
+                region = jumpingFrame;
+            }
 
         }
 
@@ -313,11 +315,11 @@ public class Player extends GameObject {
 
         selectedGun.update(delta);
 
-        if(getB2d().getLinearVelocity().x!=0){
-            if(runningRight){
-                getB2d().applyLinearImpulse(new Vector2(-getB2d().getLinearVelocity().x/100,0),getB2d().getWorldCenter(),false);
+        if (getB2d().getLinearVelocity().x != 0) {
+            if (runningRight) {
+                getB2d().applyLinearImpulse(new Vector2(-getB2d().getLinearVelocity().x / 100, 0), getB2d().getWorldCenter(), false);
             } else {
-                getB2d().applyLinearImpulse(new Vector2(-getB2d().getLinearVelocity().x/100,0),getB2d().getWorldCenter(),false);
+                getB2d().applyLinearImpulse(new Vector2(-getB2d().getLinearVelocity().x / 100, 0), getB2d().getWorldCenter(), false);
             }
         }
     }
@@ -338,6 +340,7 @@ public class Player extends GameObject {
         health -= damage;
         ((LevelWorld) gameWorld).hud.addBleedingTimer(0.5f);
         if (health <= 0) {
+            health = 0;
             ((LevelWorld) gameWorld).finishGame(0);
         }
     }
