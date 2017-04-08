@@ -40,7 +40,7 @@ public class MainScreen extends GameScreen{
         gameCamera.setToOrtho(false,viewport.getWorldWidth(),viewport.getWorldHeight());
 
         //Create World
-        currentWorld = new LevelWorld(game, viewport, gameCamera, 1);
+        currentWorld = new LevelWorld(game, viewport, gameCamera, 2);
 
         //To see debugging logs
         Gdx.app.setLogLevel(Application.LOG_DEBUG);

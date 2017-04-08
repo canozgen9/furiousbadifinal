@@ -87,6 +87,7 @@ public class EnemyBulletModel extends GameObject {
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
         fixtureDef.friction = 10f;
+        fixtureDef.isSensor = true;
         fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = BIT_GAME_ENEMY_BULLET;
         fixtureDef.filter.maskBits = BIT_MENUBUTTON | BIT_MENUWALLS | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_PLAYER;

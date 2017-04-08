@@ -12,6 +12,7 @@ import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -55,6 +56,9 @@ public class LevelWorld extends GameWorld {
     public LevelWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera, int level) {
         super(game, viewport, gameCamera);
 
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/music.wav"));
+        long id = sound.play(0.5f);
+        sound.setLooping(id, true);
         this.level = level;
 
         world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.LevelWorldContactListener());

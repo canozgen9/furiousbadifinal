@@ -29,10 +29,10 @@ public class MissileLauncher extends GunModel {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             isFiring = true;
             if (bulletTimer == 0) {
-                ((LevelWorld) player.gameWorld).gameObjects.add(new Missile(getGame(), getWorld(), this, 25, 10, 50, 10, "spritesheets/player/missile.png", 0.5f));
+                ((LevelWorld) player.gameWorld).gameObjects.add(new Missile(getGame(), getWorld(), this, 25, 10, 50, 10, "spritesheets/player/missile.png", 1f));
             } else {
                 if (bulletTimer > 0.5) {
-                    ((LevelWorld) player.gameWorld).gameObjects.add(new Missile(getGame(), getWorld(), this, 25, 10, 50, 10, "spritesheets/player/missile.png", 0.3f));
+                    ((LevelWorld) player.gameWorld).gameObjects.add(new Missile(getGame(), getWorld(), this, 25, 10, 50, 10, "spritesheets/player/missile.png", 1f));
                     bulletTimer = 0;
                 }
             }

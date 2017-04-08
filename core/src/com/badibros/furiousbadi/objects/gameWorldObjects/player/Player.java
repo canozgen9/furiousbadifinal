@@ -12,6 +12,7 @@ import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -337,6 +338,8 @@ public class Player extends GameObject {
     }
 
     public void onHitted(float damage) {
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/hurt.wav"));
+        sound.play(.5f);
         health -= damage;
         ((LevelWorld) gameWorld).hud.addBleedingTimer(0.5f);
         if (health <= 0) {

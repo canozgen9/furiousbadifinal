@@ -98,6 +98,7 @@ public class BulletModel extends GameObject {
         fixtureDef.density = 1f;
         fixtureDef.friction = 10f;
         fixtureDef.restitution = 0;
+        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = BIT_GAME_BULLET;
         fixtureDef.filter.maskBits = BIT_MENUBUTTON | BIT_MENUWALLS | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX;
         getB2d().createFixture(fixtureDef).setUserData(this);

@@ -8,6 +8,8 @@ import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.guns.EnemyBow;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -212,6 +214,8 @@ public class FiringEnemy extends GameObject {
 
     @Override
     public void afterDestroyedBody() {
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/enemy-die.wav"));
+        sound.play(.2f);
         for (int i = 0; i < (int) maxHealth / 100; i++) {
             ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).addObject(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
         }
