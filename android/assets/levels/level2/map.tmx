@@ -89,7 +89,7 @@
   <object id="139" x="2556.67" y="2229.67"/>
  </objectgroup>
  <objectgroup name="player">
-  <object id="144" x="1924" y="2564" width="27" height="28"/>
+  <object id="144" x="117" y="3035"/>
  </objectgroup>
  <objectgroup name="joint"/>
  <objectgroup name="finish">

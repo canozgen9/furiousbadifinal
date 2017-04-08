@@ -1,7 +1,11 @@
 package com.badibros.furiousbadi.screens;
 
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.Bow;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.MissileLauncher;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.SpaceGun;
 import com.badibros.furiousbadi.utils.GameVariables;
+import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,15 +35,17 @@ public class Hud {
     private Label nameLabel;
     private Texture killTexture;
     private Texture levelUpTexture;
+    private Texture bleedingTexture;
     private SpriteBatch batch;
     private Integer worldTimer;
     private float timeCount;
     private Integer score;
     private float finishGameTimer = 0;
     private float gameOverTimer = 0;
-    private MenuPlayer player;
+    private float bleedingTimer = 0;
+    private Player player;
 
-    public Hud(SpriteBatch sb, MenuPlayer player) {
+    public Hud(SpriteBatch sb, Player player) {
         this.batch = sb;
         this.player = player;
         worldTimer = 300;
@@ -76,9 +82,10 @@ public class Hud {
         worldLabel.getStyle().background = new SpriteDrawable(new Sprite(new Texture("spritesheets/enviroment/sphereHolder.png")));
         nameLabel = new Label("Furious Badi  Level: 1", new Label.LabelStyle(font, Color.WHITE));
         nameLabel.getStyle().background = new SpriteDrawable(new Sprite(new Texture("spritesheets/enviroment/sphereHolder.png")));
-        levelUpTexture = new Texture("img/levelup.png");
 
+        levelUpTexture = new Texture("img/levelup.png");
         killTexture = new Texture("img/killed.png");
+        bleedingTexture = new Texture("spritesheets/bleeding.png");
 
         table.add(nameLabel).expandX().padTop(10);
         table.add(worldLabel).expandX().padTop(10);
@@ -102,7 +109,7 @@ public class Hud {
         }
     }
 
-    public void updateInfo(MenuPlayer player) {
+    public void updateInfo(Player player) {
         score = player.experience;
         nameLabel.setText("Furious Badi  Level:" + player.level);
         scoreLabel.setText(String.format("Exp: %04d", score));
@@ -113,6 +120,11 @@ public class Hud {
         stage.draw();
         batch.begin();
         font.draw(batch, player.health + "", 50, 50);
+        String gunName = "";
+        if (player.selectedGun instanceof Bow) gunName = "Bow";
+        else if (player.selectedGun instanceof MissileLauncher) gunName = "Missile Launcher";
+        else if (player.selectedGun instanceof SpaceGun) gunName = "Space Gun";
+        font.draw(batch, gunName, viewport.getScreenWidth() - 250, 50);
         if (levelUpTimer > 0) {
             levelUpTimer -= delta;
             batch.draw(levelUpTexture, viewport.getScreenWidth() / 2 - levelUpTexture.getWidth() / 2, viewport.getScreenHeight() / 2 - levelUpTexture.getHeight() / 2);
@@ -128,12 +140,21 @@ public class Hud {
             font.draw(batch, "Succesfull!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         }
 
+        if (finishGameTimer < 0) {
+            ((MainScreen) player.getGame().getScreen()).currentWorld = new LevelWorld(player.getGame(), ((MainScreen) player.getGame().getScreen()).viewport, ((MainScreen) player.getGame().getScreen()).gameCamera, 1);
+        }
+
         if (gameOverTimer > 0) {
             gameOverTimer -= delta;
             font.draw(batch, "Game Over!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         }
         if (gameOverTimer < 0) {
             System.exit(1);
+        }
+
+        if (bleedingTimer > 0) {
+            bleedingTimer -= delta;
+            batch.draw(bleedingTexture, 0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
         }
 
         batch.end();
@@ -145,6 +166,10 @@ public class Hud {
         } else {
             gameOverTimer = 1;
         }
+    }
+
+    public void addBleedingTimer(float time) {
+        bleedingTimer += time;
     }
 
 }

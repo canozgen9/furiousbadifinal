@@ -1,9 +1,11 @@
-package com.badibros.furiousbadi.objects.mainMenuWorldObjects;
+package com.badibros.furiousbadi.objects.gameWorldObjects;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.models.player.GunModel;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Bullet;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.Bow;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.MissileLauncher;
+import com.badibros.furiousbadi.objects.gameWorldObjects.guns.SpaceGun;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
@@ -23,12 +25,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
+
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_FINISH_AREA;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
 
-public class MenuPlayer extends GameObject {
+public class Player extends GameObject {
 
     public int experience = 1;
     public int level = 1;
@@ -38,6 +42,7 @@ public class MenuPlayer extends GameObject {
     public boolean isJumping = true;
     public boolean isCrouching = false;
     public float angle = 0;
+    public GunModel selectedGun;
     private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
     //Impulses
     private Vector2 rightImpulse = new Vector2(0.05f, 0);
@@ -58,11 +63,11 @@ public class MenuPlayer extends GameObject {
     private TextureRegion firingFrame;
     private float stateTimer;
     private float cameraTimer = 0;
-    private float bulletTimer = 0;
+    private ArrayList<GunModel> guns;
 
-    private GunModel gun;
+    private int selectedGunIndex = 0;
 
-    public MenuPlayer(FuriousBadi game, World world, float x, float y) {
+    public Player(FuriousBadi game, World world, float x, float y) {
         super(game, world, x, y);
         createBody();
         //Texture confugiration
@@ -76,12 +81,9 @@ public class MenuPlayer extends GameObject {
             runningframes.add(new TextureRegion(runningtextureAtlas.findRegion("r" + i), 0, 0, 250, 400));
         }
 
-
-
         playerRunning = new Animation(0.1f, runningframes);
 
         //Crouching
-
         crouchingTextureAtlas = new TextureAtlas("spritesheets/player/crouching/crouching.pack");
         crouchingFrames = new Array<TextureRegion>();
 
@@ -103,9 +105,13 @@ public class MenuPlayer extends GameObject {
         //Set dimensions
         setBounds(0, 0, GameVariables.scale(60), GameVariables.scale(92));
 
+        guns = new ArrayList<GunModel>();
 
-        gun = new GunModel(game, world, getB2d().getPosition().x, getB2d().getPosition().y, this, "spritesheets/player/bow.png");
+        guns.add(new Bow(game, world, getB2d().getPosition().x, getB2d().getPosition().y, this, "spritesheets/player/bow.png"));
+        guns.add(new MissileLauncher(game, world, getB2d().getPosition().x, getB2d().getPosition().y, this, "spritesheets/player/missile_launcher.png"));
+        guns.add(new SpaceGun(game, world, getB2d().getPosition().x, getB2d().getPosition().y, this, "spritesheets/player/space_gun.png"));
 
+        selectedGun = guns.get(selectedGunIndex);
     }
 
     @Override
@@ -211,36 +217,18 @@ public class MenuPlayer extends GameObject {
                 getB2d().applyLinearImpulse(downImpulse, center, false);
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                if(angle<15){
-                    gun.angle += 1f;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                selectedGunIndex++;
+                selectedGun = guns.get((selectedGunIndex) % guns.size());
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                selectedGunIndex--;
+                if (selectedGunIndex < 0) {
+                    selectedGunIndex = guns.size() - 1;
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                if(angle>-15){
-                    gun.angle -= 1f;
-                }
+                selectedGun = guns.get(selectedGunIndex % guns.size());
             }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                gun.isFiring = true;
-                if(bulletTimer == 0){
-                    ((LevelWorld) gameWorld).gameObjects.add(new Bullet(getGame(), getWorld(), 0, 0, this));
-                }else{
-                    if(bulletTimer>0.5){
-                        ((LevelWorld) gameWorld).gameObjects.add(new Bullet(getGame(), getWorld(), 0, 0, this));
-                        bulletTimer = 0;
-                    }
-                }
-
-                bulletTimer+=delta;
-
-            }else{
-                bulletTimer = 0;
-                gun.isFiring = false;
-            }
-
+            selectedGun.getInputs(delta);
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                if (!gun.isFiring) {
                     if (getB2d().getLinearVelocity().x >= -1.5) {
                         getB2d().applyLinearImpulse(leftImpulse, center, false);
                     }
@@ -250,9 +238,8 @@ public class MenuPlayer extends GameObject {
                             ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
-                }
+
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if (!gun.isFiring) {
                     if (getB2d().getLinearVelocity().x <= 1.5) {
                         getB2d().applyLinearImpulse(rightImpulse, center, false);
                     }
@@ -262,7 +249,7 @@ public class MenuPlayer extends GameObject {
                             ((MainScreen) getGame().getScreen()).gameCamera.zoom += 0.005f;
                         }
                     }
-                }
+
             } else {
                 cameraTimer = 0;
                 if (((MainScreen) getGame().getScreen()).gameCamera.zoom > 1) {
@@ -285,21 +272,6 @@ public class MenuPlayer extends GameObject {
         }
 
         TextureRegion region;
-        if (gun.isFiring) {
-            if(isCrouching){
-                if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f ) {
-                    if(isCrouching){
-                        region = standingWithCrouching;
-                    }else{
-                        region = jumpingFrame;
-                    }
-                } else {
-                    region = (TextureRegion) playerCrouching.getKeyFrame(stateTimer, true);
-                }
-            }else {
-                region = firingFrame;
-            }
-        } else {
             if(isFootContact){
                 if(isCrouching){
                     if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f ) {
@@ -324,7 +296,7 @@ public class MenuPlayer extends GameObject {
                 }else{
                     region = jumpingFrame;
                 }
-            }
+
         }
 
 
@@ -339,7 +311,7 @@ public class MenuPlayer extends GameObject {
 
         setRegion(region);
 
-        gun.update(delta);
+        selectedGun.update(delta);
 
         if(getB2d().getLinearVelocity().x!=0){
             if(runningRight){
@@ -348,15 +320,13 @@ public class MenuPlayer extends GameObject {
                 getB2d().applyLinearImpulse(new Vector2(-getB2d().getLinearVelocity().x/100,0),getB2d().getWorldCenter(),false);
             }
         }
-
-
     }
 
 
     @Override
     public void render(float delta) {
         draw(getGame().getBatch());
-        gun.render(delta);
+        selectedGun.render(delta);
     }
 
     @Override
@@ -366,6 +336,7 @@ public class MenuPlayer extends GameObject {
 
     public void onHitted(float damage) {
         health -= damage;
+        ((LevelWorld) gameWorld).hud.addBleedingTimer(0.5f);
         if (health <= 0) {
             ((LevelWorld) gameWorld).finishGame(0);
         }

@@ -1,11 +1,12 @@
-package com.badibros.furiousbadi.worlds;
+package com.badibros.furiousbadi.worlds.contactlisteners;
 
+import com.badibros.furiousbadi.models.player.BulletModel;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Box;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Bullet;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Coin;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
 import com.badibros.furiousbadi.utils.GameVariables;
+import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -28,18 +29,18 @@ public class LevelWorldContactListener implements ContactListener {
             case GameVariables.BIT_GAME_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((MenuPlayer) fA.getUserData()).isFootContact = true;
-                    ((MenuPlayer) fA.getUserData()).isJumping = false;
+                    ((Player) fA.getUserData()).isFootContact = true;
+                    ((Player) fA.getUserData()).isJumping = false;
                 }else{
-                    ((MenuPlayer) fB.getUserData()).isFootContact = true;
-                    ((MenuPlayer) fB.getUserData()).isJumping = false;
+                    ((Player) fB.getUserData()).isFootContact = true;
+                    ((Player) fB.getUserData()).isJumping = false;
                 }
                 break;
             case GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_BULLET){
-                    ((Bullet) fA.getUserData()).onHitted();
+                    ((BulletModel) fA.getUserData()).onHitted();
                 }else{
-                    ((Bullet) fB.getUserData()).onHitted();
+                    ((BulletModel) fB.getUserData()).onHitted();
                 }
                 break;
 
@@ -52,20 +53,20 @@ public class LevelWorldContactListener implements ContactListener {
                 break;
             case GameVariables.BIT_GAME_BULLET | GameVariables.BIT_GAME_ENEMY:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_ENEMY){
-                    ((Enemy) fA.getUserData()).onHitted(((Bullet) fB.getUserData()).damage);
-                    ((Bullet) fB.getUserData()).onHitted();
+                    ((Enemy) fA.getUserData()).onHitted(((BulletModel) fB.getUserData()).damage);
+                    ((BulletModel) fB.getUserData()).onHitted();
                 }else{
-                    ((Enemy) fB.getUserData()).onHitted(((Bullet) fA.getUserData()).damage);
-                    ((Bullet) fA.getUserData()).onHitted();
+                    ((Enemy) fB.getUserData()).onHitted(((BulletModel) fA.getUserData()).damage);
+                    ((BulletModel) fA.getUserData()).onHitted();
                 }
                 break;
             case GameVariables.BIT_GAME_BULLET | GameVariables.BIT_GAME_BOX:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_BOX){
-                    ((Box) fA.getUserData()).onHitted(((Bullet) fB.getUserData()).damage);
-                    ((Bullet) fB.getUserData()).onHitted();
+                    ((Box) fA.getUserData()).onHitted(((BulletModel) fB.getUserData()).damage);
+                    ((BulletModel) fB.getUserData()).onHitted();
                 }else{
-                    ((Box) fB.getUserData()).onHitted(((Bullet) fA.getUserData()).damage);
-                    ((Bullet) fA.getUserData()).onHitted();
+                    ((Box) fB.getUserData()).onHitted(((BulletModel) fA.getUserData()).damage);
+                    ((BulletModel) fA.getUserData()).onHitted();
                 }
                 break;
             case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_COIN:
@@ -77,17 +78,17 @@ public class LevelWorldContactListener implements ContactListener {
                 break;
             case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_FINISH_AREA:
                 if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_COIN) {
-                    ((LevelWorld) ((MenuPlayer) fA.getUserData()).gameWorld).finishGame(1);
+                    ((LevelWorld) ((Player) fA.getUserData()).gameWorld).finishGame(1);
                 } else {
-                    ((LevelWorld) ((MenuPlayer) fB.getUserData()).gameWorld).finishGame(1);
+                    ((LevelWorld) ((Player) fB.getUserData()).gameWorld).finishGame(1);
                 }
 
                 break;
             case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_ENEMY:
                 if (fA.getFilterData().categoryBits == GameVariables.BIT_MENUPLAYER) {
-                    ((MenuPlayer) fA.getUserData()).onHitted(((Enemy) fB.getUserData()).damage);
+                    ((Player) fA.getUserData()).onHitted(((Enemy) fB.getUserData()).damage);
                 } else {
-                    ((MenuPlayer) fB.getUserData()).onHitted(((Enemy) fA.getUserData()).damage);
+                    ((Player) fB.getUserData()).onHitted(((Enemy) fA.getUserData()).damage);
                 }
 
             default:
@@ -109,11 +110,11 @@ public class LevelWorldContactListener implements ContactListener {
             case GameVariables.BIT_GAME_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((MenuPlayer) fA.getUserData()).isFootContact = false;
-                    ((MenuPlayer) fA.getUserData()).isJumping = true;
+                    ((Player) fA.getUserData()).isFootContact = false;
+                    ((Player) fA.getUserData()).isJumping = true;
                 }else{
-                    ((MenuPlayer) fB.getUserData()).isFootContact = false;
-                    ((MenuPlayer) fB.getUserData()).isJumping = true;
+                    ((Player) fB.getUserData()).isFootContact = false;
+                    ((Player) fB.getUserData()).isJumping = true;
                 }
                 break;
             case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR:

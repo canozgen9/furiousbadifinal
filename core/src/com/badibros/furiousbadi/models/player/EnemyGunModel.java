@@ -2,7 +2,7 @@ package com.badibros.furiousbadi.models.player;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -11,14 +11,12 @@ import com.badlogic.gdx.physics.box2d.World;
  * Created by canozgen9 on 4/3/17.
  */
 
-public class GunModel extends GameObject {
+public class EnemyGunModel extends GameObject {
 
-    public Player player;
+    public Enemy enemy;
 
     public boolean isFiring = false;
     public boolean isFacingRight = false;
-
-    public float angle = 0;
     protected float bulletTimer = 0;
     private Texture gunTexture;
     private BulletModel bullet;
@@ -28,22 +26,17 @@ public class GunModel extends GameObject {
     private float gunHeight;
     private float standingXOffset;
     private float standingYOffset;
-    private float crouchingXOffset;
-    private float crouchingYOffset;
 
-    public GunModel(FuriousBadi game, World world, float x, float y, Player player, java.lang.String texturePath) {
+    public EnemyGunModel(FuriousBadi game, World world, float x, float y, Enemy enemy, String texturePath) {
         super(game, world, x, y);
-        this.player = player;
-        isFacingRight = player.runningRight;
-        angle = player.angle;
+        this.enemy = enemy;
+        isFacingRight = enemy.runningRight;
         gunTexture = new Texture(texturePath);
     }
 
-    public void setPosition(float standingXOffset, float standingYOffset, float crouchingXOffset, float crouchingYOffset) {
+    public void setPosition(float standingXOffset, float standingYOffset) {
         this.standingXOffset = standingXOffset;
         this.standingYOffset = standingYOffset;
-        this.crouchingXOffset = crouchingXOffset;
-        this.crouchingYOffset = crouchingYOffset;
     }
 
     public void setGunSize(float width, float height) {
@@ -78,32 +71,22 @@ public class GunModel extends GameObject {
 
     @Override
     public void update(float delta) {
-        isFacingRight = player.runningRight;
-        angle = player.angle;
+        isFacingRight = enemy.runningRight;
         if (isFacingRight) {
             setSize(GameVariables.scale(gunWidth), GameVariables.scale(gunHeight));
-            if (player.isCrouching) {
-                setPosition(player.getB2d().getPosition().x + GameVariables.scale(crouchingXOffset), player.getB2d().getPosition().y + GameVariables.scale(crouchingYOffset));
-            } else {
-                setPosition(player.getB2d().getPosition().x + GameVariables.scale(standingXOffset), player.getB2d().getPosition().y + GameVariables.scale(standingYOffset));
-            }
-            setRotation(angle);
+            setPosition(enemy.getB2d().getPosition().x + GameVariables.scale(standingXOffset), enemy.getB2d().getPosition().y + GameVariables.scale(standingYOffset));
         } else {
             setSize(-GameVariables.scale(gunWidth), GameVariables.scale(gunHeight));
-            if (player.isCrouching) {
-                setPosition(player.getB2d().getPosition().x - GameVariables.scale(crouchingXOffset), player.getB2d().getPosition().y + GameVariables.scale(crouchingYOffset));
-            } else {
-                setPosition(player.getB2d().getPosition().x - GameVariables.scale(standingXOffset), player.getB2d().getPosition().y + GameVariables.scale(standingYOffset));
-            }
-            setRotation(-angle);
+            setPosition(enemy.getB2d().getPosition().x - GameVariables.scale(standingXOffset), enemy.getB2d().getPosition().y + GameVariables.scale(standingYOffset));
         }
         setRegion(getTexture());
     }
 
     @Override
     public void render(float delta) {
+        if (isFiring) {
             draw(getGame().getBatch());
-
+        }
     }
 
     @Override

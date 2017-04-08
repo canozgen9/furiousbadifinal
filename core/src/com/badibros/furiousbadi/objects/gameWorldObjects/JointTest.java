@@ -2,7 +2,6 @@ package com.badibros.furiousbadi.objects.gameWorldObjects;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -25,7 +24,7 @@ public class JointTest extends GameObject {
 
     public float health = 1000f;
     public boolean runningRight = true;
-    MenuPlayer player;
+    Player player;
     TextureRegion textureA = new TextureRegion(new Texture("spritesheets/enviroment/sphereHolder.png"));
     TextureRegion textureB = new TextureRegion(new Texture("spritesheets/enviroment/sphere.png"));
     Sprite spriteB = new Sprite();

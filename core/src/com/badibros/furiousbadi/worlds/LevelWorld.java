@@ -6,7 +6,7 @@ import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Box;
 import com.badibros.furiousbadi.objects.gameWorldObjects.Enemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.JointTest;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
 import com.badibros.furiousbadi.screens.Hud;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
@@ -43,7 +43,7 @@ public class LevelWorld extends GameWorld {
     public Hud hud;
     //Level
     int level;
-    private MenuPlayer player;
+    private Player player;
     //Tiled map
     private TmxMapLoader mapLoader;
     private TiledMap tiledMap;
@@ -54,7 +54,7 @@ public class LevelWorld extends GameWorld {
 
         this.level = level;
 
-        world.setContactListener(new LevelWorldContactListener());
+        world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.LevelWorldContactListener());
 
         ((MainScreen) game.getScreen()).gameCamera.zoom = 1;
         //tiled map
@@ -101,7 +101,7 @@ public class LevelWorld extends GameWorld {
 
         gameObjects = new ArrayList<GameObject>();
         Rectangle rectangle2 = ((RectangleMapObject) tiledMap.getLayers().get(11).getObjects().get(0)).getRectangle();
-        player = new MenuPlayer(game,world,(rectangle2.getX()+rectangle2.getWidth()/2),(rectangle2.getY()+rectangle2.getHeight()/2));
+        player = new Player(game, world, (rectangle2.getX() + rectangle2.getWidth() / 2), (rectangle2.getY() + rectangle2.getHeight() / 2));
         player.gameWorld = this;
 
 
@@ -154,7 +154,7 @@ public class LevelWorld extends GameWorld {
 
 
         hud = new Hud(game.getBatch(), player);
-
+        ((MainScreen) game.getScreen()).currentWorld = this;
     }
 
     @Override

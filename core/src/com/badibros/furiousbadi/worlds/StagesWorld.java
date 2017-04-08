@@ -2,9 +2,9 @@ package com.badibros.furiousbadi.worlds;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameWorld;
+import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.Clickable;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class StagesWorld extends GameWorld {
 
     //Objects
-    private MenuPlayer menuPlayer;
+    private Player player;
     private Texture background;
     private Texture header;
 
@@ -38,7 +38,7 @@ public class StagesWorld extends GameWorld {
         buttons = new ArrayList<MenuButton>();
 
         //Contact Listener
-        world.setContactListener(new MainMenuWorldContactListener());
+        world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.MainMenuWorldContactListener());
 
         createBox(0,0, GameVariables.scale(50),GameVariables.scale(600));
         createBox(0,0,GameVariables.scale(2000),GameVariables.scale(50));
@@ -46,7 +46,7 @@ public class StagesWorld extends GameWorld {
         createBox(0,GameVariables.scale(600),GameVariables.scale(2000),GameVariables.scale(50));
 
         //Objects
-        menuPlayer = new MenuPlayer(game,world,80,400);
+        player = new Player(game, world, 80, 400);
 
         MenuButton level1Button = new MenuButton(game, world, 500, 250, "img/mainmenu/buttons/level1.png", "img/mainmenu/buttons/level1_selected.png", new Clickable() {
             @Override
@@ -79,7 +79,7 @@ public class StagesWorld extends GameWorld {
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
             FuriousBadi.DEBUGGING = !FuriousBadi.DEBUGGING;
         }
-        menuPlayer.getInputs(delta);
+        player.getInputs(delta);
         for(MenuButton button:buttons){
             button.getInputs(delta);
         }
@@ -89,7 +89,7 @@ public class StagesWorld extends GameWorld {
         //Update world
         world.step(1 / 60f, 6, 2);
         //Update objects
-        menuPlayer.update(delta);
+        player.update(delta);
         for(MenuButton button:buttons){
             button.update(delta);
         }
@@ -98,8 +98,8 @@ public class StagesWorld extends GameWorld {
     }
 
     public void updateGameCamera(float delta){
-        gameCamera.position.x=Math.max(gameCamera.position.x+(menuPlayer.getB2d().getPosition().x-gameCamera.position.x)*.05f,gameCamera.viewportWidth/2+GameVariables.scale(40));
-        gameCamera.position.y=Math.max(gameCamera.position.y+(menuPlayer.getB2d().getPosition().y-gameCamera.position.y)*.05f,gameCamera.viewportHeight/2+GameVariables.scale(40));
+        gameCamera.position.x = Math.max(gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f, gameCamera.viewportWidth / 2 + GameVariables.scale(40));
+        gameCamera.position.y = Math.max(gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f, gameCamera.viewportHeight / 2 + GameVariables.scale(40));
         gameCamera.update();
     }
 
@@ -107,7 +107,7 @@ public class StagesWorld extends GameWorld {
         //Render background
         game.getBatch().begin();
         game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(1920),GameVariables.scale(520));
-        menuPlayer.draw(game.getBatch());
+        player.draw(game.getBatch());
         game.getBatch().end();
         //Render game objects
         for(MenuButton button:buttons){
@@ -119,7 +119,7 @@ public class StagesWorld extends GameWorld {
 
     public void dispose() {
         debugRenderer.dispose();
-        menuPlayer.destroyBody();
+        player.destroyBody();
         for(MenuButton button:buttons){
             button.destroyBody();
         }

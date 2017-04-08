@@ -1,7 +1,7 @@
-package com.badibros.furiousbadi.worlds;
+package com.badibros.furiousbadi.worlds.contactlisteners;
 
+import com.badibros.furiousbadi.objects.gameWorldObjects.Player;
 import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuButton;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -25,11 +25,11 @@ public class MainMenuWorldContactListener implements ContactListener {
             case GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((MenuPlayer) fA.getUserData()).isFootContact = true;
-                    ((MenuPlayer) fA.getUserData()).isJumping = false;
+                    ((Player) fA.getUserData()).isFootContact = true;
+                    ((Player) fA.getUserData()).isJumping = false;
                 }else{
-                    ((MenuPlayer) fB.getUserData()).isFootContact = true;
-                    ((MenuPlayer) fB.getUserData()).isJumping = false;
+                    ((Player) fB.getUserData()).isFootContact = true;
+                    ((Player) fB.getUserData()).isJumping = false;
                 }
                 break;
             case GameVariables.BIT_MENUPLAYER | GameVariables.BIT_MENUBUTTON:
@@ -56,11 +56,11 @@ public class MainMenuWorldContactListener implements ContactListener {
             case GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((MenuPlayer) fA.getUserData()).isFootContact = false;
-                    ((MenuPlayer) fA.getUserData()).isJumping = true;
+                    ((Player) fA.getUserData()).isFootContact = false;
+                    ((Player) fA.getUserData()).isJumping = true;
                 }else{
-                    ((MenuPlayer) fB.getUserData()).isFootContact = false;
-                    ((MenuPlayer) fB.getUserData()).isJumping = true;
+                    ((Player) fB.getUserData()).isFootContact = false;
+                    ((Player) fB.getUserData()).isJumping = true;
                 }
                 break;
         }

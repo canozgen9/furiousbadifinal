@@ -2,7 +2,7 @@ package com.badibros.furiousbadi.objects.gameWorldObjects;
 
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
-import com.badibros.furiousbadi.objects.mainMenuWorldObjects.MenuPlayer;
+import com.badibros.furiousbadi.models.player.EnemyGunModel;
 import com.badibros.furiousbadi.screens.MainScreen;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
@@ -28,14 +28,14 @@ public class Enemy extends GameObject {
 
     public boolean playerDetected = false;
     public float damage = 50f;
+    public boolean runningRight = true;
     private int experience;
     private float health;
     private float maxHealth;
-    private boolean runningRight = true;
     private TextureRegion textureRegion;
     private float width;
     private float height;
-    private MenuPlayer player;
+    private Player player;
     private Array<TextureRegion> disappearFrames;
     private Animation disappearAnimation;
     private float playerDetectX = GameVariables.scale(300);
@@ -51,7 +51,9 @@ public class Enemy extends GameObject {
     private boolean dead = false;
     private float stateTimer;
 
-    public Enemy(FuriousBadi game, World world, float x, float y, MenuPlayer player, float health, float damage, int type, float width, float height) {
+    private EnemyGunModel gun;
+
+    public Enemy(FuriousBadi game, World world, float x, float y, Player player, float health, float damage, int type, float width, float height) {
         super(game, world, x, y);
         this.player = player;
         this.experience = (int) health;
@@ -146,6 +148,9 @@ public class Enemy extends GameObject {
         }
 
         setRegion(textureRegion);
+        if (gun != null) {
+            gun.update(delta);
+        }
     }
 
 
@@ -159,8 +164,12 @@ public class Enemy extends GameObject {
                 dead = true;
             }
         }
-        if(!dead)
+        if (!dead) {
             draw(getGame().getBatch());
+            if (gun != null) {
+                gun.render(delta);
+            }
+        }
     }
 
     @Override
@@ -190,4 +199,11 @@ public class Enemy extends GameObject {
         }
     }
 
+    public EnemyGunModel getGun() {
+        return gun;
+    }
+
+    public void setGun(EnemyGunModel gun) {
+        this.gun = gun;
+    }
 }
