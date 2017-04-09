@@ -36,6 +36,7 @@ import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_COIN;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_PLAYER_TOP_SENSOR;
 import static com.badibros.furiousbadi.utils.GameVariables.PPM;
 
 /**
@@ -105,7 +106,7 @@ public class LevelWorld extends GameWorld {
             fixtureDef.shape = shape;
 
             fixtureDef.filter.categoryBits = GameVariables.BIT_GAME_GROUND;
-            fixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+            fixtureDef.filter.maskBits = BIT_GAME_PLAYER_TOP_SENSOR | BIT_GAME_ENEMY_BULLET | BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
             body.createFixture(fixtureDef);
 
         }
@@ -258,8 +259,8 @@ public class LevelWorld extends GameWorld {
     @Override
     public void updateGameCamera(float delta) {
         if (running) {
-            gameCamera.position.x = Math.max(gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f, gameCamera.viewportWidth / 2 + GameVariables.scale(40));
-            gameCamera.position.y = Math.max(gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f, gameCamera.viewportHeight / 2 + GameVariables.scale(40));
+            gameCamera.position.x = gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f;
+            gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f;
             gameCamera.update();
         }
     }

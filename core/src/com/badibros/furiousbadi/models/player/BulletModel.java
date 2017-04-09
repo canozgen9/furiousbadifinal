@@ -28,6 +28,7 @@ public class BulletModel extends GameObject {
     public float damage = 80f;
     public float speed = 0.3f;
     public float width = 0, height = 0, textureWith = 0, textureHeight = 0;
+    public int type;
     private Array<TextureRegion> explodeFrames;
     private Animation explodeAnimation;
     private TextureRegion bulletInitialFrame;

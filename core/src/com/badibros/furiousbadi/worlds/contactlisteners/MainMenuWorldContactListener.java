@@ -25,11 +25,9 @@ public class MainMenuWorldContactListener implements ContactListener {
             case GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((Player) fA.getUserData()).isFootContact = true;
-                    ((Player) fA.getUserData()).isJumping = false;
+                    ((Player) fA.getUserData()).bottomSensorColliding++;
                 }else{
-                    ((Player) fB.getUserData()).isFootContact = true;
-                    ((Player) fB.getUserData()).isJumping = false;
+                    ((Player) fB.getUserData()).bottomSensorColliding++;
                 }
                 break;
             case GameVariables.BIT_PLAYER | GameVariables.BIT_MENUBUTTON:
@@ -56,11 +54,9 @@ public class MainMenuWorldContactListener implements ContactListener {
             case GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
-                    ((Player) fA.getUserData()).isFootContact = false;
-                    ((Player) fA.getUserData()).isJumping = true;
+                    ((Player) fA.getUserData()).bottomSensorColliding++;
                 }else{
-                    ((Player) fB.getUserData()).isFootContact = false;
-                    ((Player) fB.getUserData()).isJumping = true;
+                    ((Player) fB.getUserData()).bottomSensorColliding--;
                 }
                 break;
         }

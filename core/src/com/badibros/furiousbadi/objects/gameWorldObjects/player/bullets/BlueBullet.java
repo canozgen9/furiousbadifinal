@@ -15,6 +15,7 @@ public class BlueBullet extends BulletModel {
     public BlueBullet(FuriousBadi game, World world, GunModel gun, float width, float height, float textureWidth, float textureHeight, String texturePath, float speed) {
         super(game, world, gun, width, height, textureWidth, textureHeight, texturePath, speed);
         setDamage(500f);
+        type = 2;
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/spacegun.wav"));
         sound.play(.5f);
     }

@@ -3,6 +3,7 @@ package com.badibros.furiousbadi.screens;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -15,6 +16,7 @@ public class SplashScreen extends GameScreen {
     private float screenTimer = 0;
     private float screenTimeout = 5;
     private float x, y;
+    private boolean isMusicPlaying = false;
 
     public SplashScreen(FuriousBadi game) {
         super(game);
@@ -30,9 +32,10 @@ public class SplashScreen extends GameScreen {
 
     @Override
     public void update(float delta) {
+
         if(comingFromLeft){
             x+=10;
-        } else if(goingToRight){
+        } else if (goingToRight) {
             x+=10;
         } else {
             x++;
@@ -40,6 +43,11 @@ public class SplashScreen extends GameScreen {
 
         if(x>=Gdx.graphics.getWidth()/2-logo.getWidth()/2f/2f-50){
             comingFromLeft = false;
+            if (!isMusicPlaying) {
+                Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/badibros.ogg"));
+                sound.play(1);
+                isMusicPlaying = true;
+            }
         }
         if(x>=Gdx.graphics.getWidth()/2-logo.getWidth()/2f/2f+50){
             goingToRight = true;

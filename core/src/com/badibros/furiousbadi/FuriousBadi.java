@@ -1,6 +1,6 @@
 package com.badibros.furiousbadi;
 
-import com.badibros.furiousbadi.screens.MainScreen;
+import com.badibros.furiousbadi.screens.SplashScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +19,7 @@ public class FuriousBadi extends Game {
 		batch = new SpriteBatch();
 		fpsLogger = new FPSLogger();
 //		setScreen(new SplashScreen(this));
-		setScreen(new MainScreen(this));
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override

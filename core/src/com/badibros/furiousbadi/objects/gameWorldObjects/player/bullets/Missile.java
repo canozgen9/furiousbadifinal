@@ -15,6 +15,7 @@ public class Missile extends BulletModel {
     public Missile(FuriousBadi game, World world, GunModel gun, float width, float height, float textureWidth, float textureHeight, String texturePath, float speed) {
         super(game, world, gun, width, height, textureWidth, textureHeight, texturePath, speed);
         setDamage(200f);
+        type = 3;
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/missile.wav"));
         sound.play(.3f);
     }

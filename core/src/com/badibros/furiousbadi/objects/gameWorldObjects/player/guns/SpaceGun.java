@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class SpaceGun extends GunModel {
 
+
     public SpaceGun(FuriousBadi game, World world, float x, float y, Player player, String texturePath) {
         super(game, world, x, y, player, texturePath);
         setGunSize(100, 25);

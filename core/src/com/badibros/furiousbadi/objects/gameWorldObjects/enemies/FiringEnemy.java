@@ -31,6 +31,7 @@ import static com.badibros.furiousbadi.utils.GameVariables.BIT_PLAYER;
 
 public class FiringEnemy extends GameObject {
 
+    private static int killedEnemy = 0;
     //Enemy Attributes
     public boolean runningRight = true;
     public float damage = 50f;
@@ -221,10 +222,20 @@ public class FiringEnemy extends GameObject {
         }
     }
 
-    public void onHitted(float damage) {
+    public void onHitted(float damage, int bulletType) {
         if (!hitted) {
             health -= damage;
+
             if (health <= 0) {
+                killedEnemy++;
+                if (killedEnemy % 2 == 1) {
+                    Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/kill.ogg"));
+                    sound.play(.5f);
+
+                } else {
+                    Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/double-kill.ogg"));
+                    sound.play(.5f);
+                }
                 setSize(GameVariables.scale(width * 3 / 2), GameVariables.scale(height * 3 / 2));
                 setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
                 destroyBody();

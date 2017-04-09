@@ -38,15 +38,17 @@ public class Player extends GameObject {
 
     public int experience = 1;
     public int level = 1;
-    public int coin = 0;
+    public int coin;
     public float health = 1000;
     public float maxHealth = 1000;
     public boolean runningRight = true;
-    public boolean isFootContact = false;
-    public boolean isJumping = true;
     public boolean isCrouching = false;
+    public boolean canStandUp = true;
+    public boolean canJump = false;
     public float angle = 0;
     public GunModel selectedGun;
+    public int topSensorColliding = 0;
+    public int bottomSensorColliding = 0;
     private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
     //Impulses
     private Vector2 rightImpulse = new Vector2(0.05f, 0);
@@ -68,7 +70,6 @@ public class Player extends GameObject {
     private float stateTimer;
     private float cameraTimer = 0;
     private ArrayList<GunModel> guns;
-
     private int selectedGunIndex = 0;
 
     public Player(FuriousBadi game, World world, float x, float y) {
@@ -125,35 +126,49 @@ public class Player extends GameObject {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         setB2d(getWorld().createBody(bodyDef));
-        FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape2 = new PolygonShape();
-        shape2.setAsBox(GameVariables.scale(20), GameVariables.scale(20));
-        fixtureDef.shape = shape2;
-        fixtureDef.density = 1f;
-        fixtureDef.friction = 0f;
-        fixtureDef.restitution = 0f;
-        fixtureDef.filter.categoryBits = GameVariables.BIT_PLAYER;
-        fixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
-        getB2d().createFixture(fixtureDef).setUserData(this);
-        CircleShape shape = new CircleShape();
-        shape.setRadius(GameVariables.scale(20));
-        shape.setPosition(new Vector2(0, GameVariables.scale(45)));
-        fixtureDef.shape = shape;
-        getB2d().createFixture(fixtureDef).setUserData(this);
 
+        //BODY
+        FixtureDef bodyFixtureDef = new FixtureDef();
+        PolygonShape bodyShape = new PolygonShape();
+        bodyShape.setAsBox(GameVariables.scale(20), GameVariables.scale(20));
+        bodyFixtureDef.shape = bodyShape;
+        bodyFixtureDef.density = 1f;
+        bodyFixtureDef.friction = 0f;
+        bodyFixtureDef.restitution = 0f;
+        bodyFixtureDef.filter.categoryBits = GameVariables.BIT_PLAYER;
+        bodyFixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
+        getB2d().createFixture(bodyFixtureDef).setUserData(this);
+
+        //HEAD
+        CircleShape headShape = new CircleShape();
+        headShape.setRadius(GameVariables.scale(20));
+        headShape.setPosition(new Vector2(0, GameVariables.scale(45)));
+        bodyFixtureDef.shape = headShape;
+        getB2d().createFixture(bodyFixtureDef).setUserData(this);
+
+        //BOTTOM SENSOR
         FixtureDef bottomSensor = new FixtureDef();
-
-        PolygonShape shape1 = new PolygonShape();
-        shape1.setAsBox(GameVariables.scale(10), GameVariables.scale(5), new Vector2(GameVariables.scale(0), GameVariables.scale(-25)), 0);
+        PolygonShape bottomSensorShape = new PolygonShape();
+        bottomSensorShape.setAsBox(GameVariables.scale(10), GameVariables.scale(5), new Vector2(GameVariables.scale(0), GameVariables.scale(-25)), 0);
         bottomSensor.isSensor = true;
-        bottomSensor.shape = shape1;
+        bottomSensor.shape = bottomSensorShape;
         bottomSensor.filter.categoryBits = GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
         bottomSensor.filter.maskBits = maskBits;
-
         getB2d().createFixture(bottomSensor).setUserData(this);
 
-        shape.dispose();
-        shape1.dispose();
+        //TOP SENSOR
+        PolygonShape topSensorShape = new PolygonShape();
+        topSensorShape.setAsBox(GameVariables.scale(15), GameVariables.scale(10), new Vector2(0, GameVariables.scale(55)), 0);
+        FixtureDef topSensorFixtureDef = new FixtureDef();
+        topSensorFixtureDef.shape = topSensorShape;
+        topSensorFixtureDef.isSensor = true;
+        topSensorFixtureDef.filter.categoryBits = GameVariables.BIT_GAME_PLAYER_TOP_SENSOR;
+        topSensorFixtureDef.filter.maskBits = GameVariables.BIT_GAME_GROUND;
+        getB2d().createFixture(topSensorFixtureDef).setUserData(this);
+
+        headShape.dispose();
+        bottomSensorShape.dispose();
+        topSensorShape.dispose();
     }
 
     @Override
@@ -200,9 +215,8 @@ public class Player extends GameObject {
         if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-                if (!isJumping && !isCrouching) {
+                if (canJump && !isCrouching) {
                     getB2d().applyForce(upImpulse, center, false);
-                    isJumping = true;
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -212,10 +226,12 @@ public class Player extends GameObject {
                 getB2d().getFixtureList().get(1).setFilterData(filterData);
 
             } else {
-                isCrouching = false;
-                Filter filterData = getB2d().getFixtureList().get(1).getFilterData();
-                filterData.maskBits = maskBits;
-                getB2d().getFixtureList().get(1).setFilterData(filterData);
+                if (canStandUp) {
+                    isCrouching = false;
+                    Filter filterData = getB2d().getFixtureList().get(1).getFilterData();
+                    filterData.maskBits = maskBits;
+                    getB2d().getFixtureList().get(1).setFilterData(filterData);
+                }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 getB2d().applyLinearImpulse(downImpulse, center, false);
@@ -265,6 +281,8 @@ public class Player extends GameObject {
 
     @Override
     public void update(float delta) {
+        canStandUp = topSensorColliding == 0;
+        canJump = bottomSensorColliding != 0;
         stateTimer += delta;
         setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2 + GameVariables.scale(20));
 
@@ -276,7 +294,7 @@ public class Player extends GameObject {
         }
 
         TextureRegion region;
-        if (isFootContact) {
+        if (canJump) {
             if (isCrouching) {
                 if (getB2d().getLinearVelocity().x <= 0.2f && getB2d().getLinearVelocity().x >= -0.2f) {
                     if (isCrouching) {

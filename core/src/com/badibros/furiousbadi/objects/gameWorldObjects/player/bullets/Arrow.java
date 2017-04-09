@@ -15,6 +15,7 @@ public class Arrow extends BulletModel {
     public Arrow(FuriousBadi game, World world, GunModel gun, float width, float height, float textureWidth, float textureHeight, String texturePath, float speed) {
         super(game, world, gun, width, height, textureWidth, textureHeight, texturePath, speed);
         setDamage(50f);
+        type = 1;
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/arrow.wav"));
         sound.play();
     }
