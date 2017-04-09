@@ -176,7 +176,7 @@ public class Enemy extends GameObject {
     @Override
     public void afterDestroyedBody() {
         for (int i = 0; i < (int) maxHealth / 100; i++) {
-            ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).addObject(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
+            ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).gameObjectsToAdd.add(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
         }
     }
 

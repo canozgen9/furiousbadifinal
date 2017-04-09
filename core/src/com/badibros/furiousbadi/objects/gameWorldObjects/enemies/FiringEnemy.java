@@ -6,6 +6,7 @@ import com.badibros.furiousbadi.models.enemy.EnemyGunModel;
 import com.badibros.furiousbadi.objects.gameWorldObjects.collectables.Coin;
 import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.guns.EnemyBow;
 import com.badibros.furiousbadi.screens.MainScreen;
+import com.badibros.furiousbadi.utils.GameLogic;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badibros.furiousbadi.worlds.LevelWorld;
 import com.badlogic.gdx.Gdx;
@@ -66,6 +67,8 @@ public class FiringEnemy extends GameObject {
     private float stateTimer;
     //Gun
     private EnemyGunModel gun;
+
+    private boolean isDecayed = false;
 
     public FiringEnemy(FuriousBadi game, World world, float x, float y, com.badibros.furiousbadi.objects.gameWorldObjects.player.Player player, float health, float damage, String type) {
         super(game, world, x, y);
@@ -159,8 +162,9 @@ public class FiringEnemy extends GameObject {
     @Override
     public void update(float delta) {
         stateTimer += delta;
-        if (!hitted)
+        if (!hitted) {
             setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2 + GameVariables.scale(20));
+        }
 
         checkDestroyFlag();
 
@@ -218,36 +222,46 @@ public class FiringEnemy extends GameObject {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/enemy-die.wav"));
         sound.play(.2f);
         for (int i = 0; i < (int) maxHealth / 100; i++) {
-            ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).addObject(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
+            ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).gameObjectsToAdd.add(new Coin(getGame(), getWorld(), getB2d().getPosition().x, getB2d().getPosition().y));
         }
     }
 
     public void onHitted(float damage, int bulletType) {
         if (!hitted) {
             health -= damage;
-
-            if (health <= 0) {
-                killedEnemy++;
-                if (killedEnemy % 2 == 1) {
-                    Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/kill.ogg"));
-                    sound.play(.5f);
-
-                } else {
-                    Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/double-kill.ogg"));
-                    sound.play(.5f);
+            if (!GameLogic.isMatched(type, bulletType)) {
+                if (!isDecayed) {
+                    ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).addObject("FiringEnemy", type, 3, getB2d().getPosition().x, getB2d().getPosition().y);
+                    isDecayed = true;
                 }
                 setSize(GameVariables.scale(width * 3 / 2), GameVariables.scale(height * 3 / 2));
                 setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
                 destroyBody();
                 hitted = true;
-                player.experience += experience;
-                if (player.experience >= 1000) {
-                    player.experience -= 1000;
-                    player.level++;
-                    ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.levelUpTimer += 1;
+            } else {
+                if (health <= 0) {
+                    killedEnemy++;
+                    if (killedEnemy % 2 == 1) {
+                        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/kill.ogg"));
+                        sound.play(.5f);
+
+                    } else {
+                        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/double-kill.ogg"));
+                        sound.play(.5f);
+                    }
+                    setSize(GameVariables.scale(width * 3 / 2), GameVariables.scale(height * 3 / 2));
+                    setPosition(getB2d().getPosition().x - getWidth() / 2, getB2d().getPosition().y - getHeight() / 2);
+                    destroyBody();
+                    hitted = true;
+                    player.experience += experience;
+                    if (player.experience >= 1000) {
+                        player.experience -= 1000;
+                        player.level++;
+                        ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.levelUpTimer += 1;
+                    }
+                    ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.killTimer += 1;
+                    ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.updateInfo(player);
                 }
-                ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.killTimer += 1;
-                ((LevelWorld) ((MainScreen) getGame().getScreen()).currentWorld).hud.updateInfo(player);
             }
         }
     }

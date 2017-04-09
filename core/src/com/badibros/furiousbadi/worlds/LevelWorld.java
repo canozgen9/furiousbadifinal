@@ -3,12 +3,14 @@ package com.badibros.furiousbadi.worlds;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.models.GameWorld;
+import com.badibros.furiousbadi.models.enemy.BabyEnemyStracth;
 import com.badibros.furiousbadi.objects.gameWorldObjects.JointTest;
 import com.badibros.furiousbadi.objects.gameWorldObjects.destroyables.Box;
 import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.FiringEnemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.screens.Hud;
 import com.badibros.furiousbadi.screens.MainScreen;
+import com.badibros.furiousbadi.utils.GameLogic;
 import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -56,15 +58,19 @@ public class LevelWorld extends GameWorld {
     private TmxMapLoader mapLoader;
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer mapRenderer;
+    private ArrayList<BabyEnemyStracth> babyEnemiesToAdd;
 
     public LevelWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera, int level) {
         super(game, viewport, gameCamera);
+
+        GameLogic.gameLogic.put(1, "blue");
+        GameLogic.gameLogic.put(2, "red");
+        GameLogic.gameLogic.put(3, "green");
 
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/music.wav"));
         long id = sound.play(0.5f);
         sound.setLooping(id, true);
         this.level = level;
-
 
         world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.LevelWorldContactListener());
 
@@ -113,6 +119,8 @@ public class LevelWorld extends GameWorld {
 
         gameObjects = new ArrayList<GameObject>();
         gameObjectsToAdd = new ArrayList<GameObject>();
+        babyEnemiesToAdd = new ArrayList<BabyEnemyStracth>();
+
 
         Rectangle rectangle2 = ((RectangleMapObject) tiledMap.getLayers().get(11).getObjects().get(0)).getRectangle();
         player = new Player(game, world, (rectangle2.getX() + rectangle2.getWidth() / 2), (rectangle2.getY() + rectangle2.getHeight() / 2));
@@ -212,6 +220,7 @@ public class LevelWorld extends GameWorld {
 
     @Override
     public void getInputs(float delta) {
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
             FuriousBadi.DEBUGGING = !FuriousBadi.DEBUGGING;
         }
@@ -236,7 +245,10 @@ public class LevelWorld extends GameWorld {
                 gameObjects.add(g);
             }
             gameObjectsToAdd.clear();
-
+            for (BabyEnemyStracth babyEnemy : babyEnemiesToAdd) {
+                gameObjects.add(new FiringEnemy(game, world, babyEnemy.x * 100, babyEnemy.y * 100, player, 500, 50, babyEnemy.type));
+            }
+            babyEnemiesToAdd.clear();
             world.step(1 / 60f, 6, 2);
             mapRenderer.setView(gameCamera);
             player.update(delta);
@@ -246,14 +258,12 @@ public class LevelWorld extends GameWorld {
         }
     }
 
-    public void addObject(GameObject o) {
-        ArrayList<GameObject> temp = new ArrayList<GameObject>();
-
-        temp.add(o);
-        temp.addAll(gameObjects);
-
-        gameObjects = temp;
-
+    public void addObject(String type, String oType, int count, float x, float y) {
+        if (type.equals("FiringEnemy")) {
+            for (int i = 0; i < count; i++) {
+                babyEnemiesToAdd.add(new BabyEnemyStracth(oType, x, y));
+            }
+        }
     }
 
     @Override
