@@ -23,8 +23,9 @@ public class StagesWorld extends GameWorld {
     private Texture background;
     private Texture header;
 
-    private ArrayList<MenuButton> buttons;
+    Texture info;
 
+    private ArrayList<MenuButton> buttons;
 
     public StagesWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera) {
         super(game,viewport,gameCamera);
@@ -75,6 +76,8 @@ public class StagesWorld extends GameWorld {
         header = new Texture("img/header.png");
         gameCamera.position.x = player.getB2d().getPosition().x;
         gameCamera.position.y = player.getB2d().getPosition().y;
+
+        info = new Texture("img/warning.png");
     }
 
     public void getInputs(float delta) {
@@ -101,15 +104,18 @@ public class StagesWorld extends GameWorld {
 
     public void updateGameCamera(float delta){
         gameCamera.position.x = gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f;
-        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f;
+        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f+GameVariables.scale(10);
         gameCamera.update();
     }
 
     public void render(float delta) {
+        game.getBatch().setProjectionMatrix(gameCamera.combined);
         //Render background
         game.getBatch().begin();
         //game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(1920),GameVariables.scale(520));
+        game.getBatch().draw(info,GameVariables.scale(250),GameVariables.scale(330),GameVariables.scale(508),GameVariables.scale(150));
         player.render(delta);
+
         game.getBatch().end();
         //Render game objects
         for(MenuButton button:buttons){

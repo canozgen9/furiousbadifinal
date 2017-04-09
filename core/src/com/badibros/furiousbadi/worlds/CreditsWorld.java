@@ -94,11 +94,12 @@ public class CreditsWorld extends GameWorld {
 
     public void updateGameCamera(float delta){
         gameCamera.position.x = gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f;
-        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f;
+        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f+GameVariables.scale(10);
         gameCamera.update();
     }
 
     public void render(float delta) {
+        game.getBatch().setProjectionMatrix(gameCamera.combined);
         //Render background
         game.getBatch().begin();
         //game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(1920),GameVariables.scale(520));

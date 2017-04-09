@@ -1,1 +1,1 @@
-{"player-level":52,"player-coin":652,"player-experience":901}
+{"player-level":54,"player-coin":679,"player-experience":501}

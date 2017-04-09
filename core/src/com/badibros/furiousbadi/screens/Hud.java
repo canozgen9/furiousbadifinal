@@ -186,7 +186,11 @@ public class Hud {
             font.draw(batch, "Game Over!!", viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         }
         if (gameOverTimer < 0) {
-            ((MainScreen) player.getGame().getScreen()).currentWorld = new LevelWorld(player.getGame(), ((MainScreen) player.getGame().getScreen()).viewport, ((MainScreen) player.getGame().getScreen()).gameCamera, ((LevelWorld) player.gameWorld).level);
+            if(((LevelWorld) player.gameWorld).level<2){
+                ((MainScreen) player.getGame().getScreen()).currentWorld = new LevelWorld(player.getGame(), ((MainScreen) player.getGame().getScreen()).viewport, ((MainScreen) player.getGame().getScreen()).gameCamera, ((LevelWorld) player.gameWorld).level++);
+            }else{
+                System.exit(0);
+            }
         }
 
         if (bleedingTimer > 0) {

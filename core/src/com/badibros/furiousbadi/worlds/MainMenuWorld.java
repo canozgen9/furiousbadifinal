@@ -24,6 +24,8 @@ public class MainMenuWorld extends GameWorld {
     private Texture header;
     private ArrayList<MenuButton> buttons;
 
+    Texture tutorial;
+
     public MainMenuWorld(FuriousBadi game, Viewport viewport, OrthographicCamera gameCamera) {
         super(game,viewport,gameCamera);
     }
@@ -35,6 +37,8 @@ public class MainMenuWorld extends GameWorld {
         gameCamera.zoom = 1;
 
         buttons = new ArrayList<MenuButton>();
+
+        tutorial = new Texture("img/tutorial.png");
 
         //Contact Listener
         world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.MainMenuWorldContactListener());
@@ -81,6 +85,7 @@ public class MainMenuWorld extends GameWorld {
         header = new Texture("img/header.png");
         gameCamera.position.x = player.getB2d().getPosition().x;
         gameCamera.position.y = player.getB2d().getPosition().y;
+
     }
 
     public void getInputs(float delta) {
@@ -108,14 +113,16 @@ public class MainMenuWorld extends GameWorld {
 
     public void updateGameCamera(float delta){
         gameCamera.position.x = gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f;
-        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f;
+        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f+GameVariables.scale(10);
         gameCamera.update();
     }
 
     public void render(float delta) {
+        game.getBatch().setProjectionMatrix(gameCamera.combined);
         //Render background
         game.getBatch().begin();
         //game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(2420),GameVariables.scale(520));
+        game.getBatch().draw(tutorial,GameVariables.scale(250),GameVariables.scale(330),GameVariables.scale(508),GameVariables.scale(150));
         player.render(delta);
         game.getBatch().end();
         //Render game objects
@@ -124,6 +131,7 @@ public class MainMenuWorld extends GameWorld {
         }
         //Debug renderer
         if(FuriousBadi.DEBUGGING) debugRenderer.render(world, gameCamera.combined);
+
     }
 
     public void dispose() {
