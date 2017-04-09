@@ -19,11 +19,12 @@ public class GunModel extends GameObject {
     public boolean isFacingRight = false;
 
     public float angle = 0;
-    protected float bulletTimer = 0;
+    public float bulletTimer = 0;
+    public int clipCount;
+    public int clipCapacity;
+    public float attackSpeed = .5f;
     private Texture gunTexture;
     private BulletModel bullet;
-    private int clipCount;
-    private int clipCapacity;
     private float gunWidth;
     private float gunHeight;
     private float standingXOffset;
@@ -109,5 +110,19 @@ public class GunModel extends GameObject {
     @Override
     public void afterDestroyedBody() {
 
+    }
+
+    public boolean canFire() {
+        return !(clipCount <= 0 && clipCapacity <= 0);
+    }
+
+    public void launchBullet() {
+        clipCapacity--;
+        if (clipCapacity <= 0) {
+            if (clipCount > 0) {
+                clipCount--;
+                clipCapacity = 5;
+            }
+        }
     }
 }

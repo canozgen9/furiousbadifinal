@@ -144,6 +144,12 @@ public class Hud {
         shapeRenderer.rect(80, GameVariables.HEIGHT - 86, 160, 14);
         shapeRenderer.setColor(Color.valueOf("ffc107"));
         shapeRenderer.rect(80, GameVariables.HEIGHT - 86, 160 * player.experience / 1000, 14);
+
+        //Gun bullet timer
+        shapeRenderer.setColor(Color.LIME);
+        shapeRenderer.rect(15, 60, player.selectedGun.attackSpeed * 250, 30);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(15, 60, player.selectedGun.bulletTimer * 250, 30);
         shapeRenderer.end();
         //stage.draw();
         batch.begin();
@@ -154,6 +160,8 @@ public class Hud {
         else if (player.selectedGun instanceof MissileLauncher) gunName = "Missile Launcher";
         else if (player.selectedGun instanceof SpaceGun) gunName = "Space Gun";
         font.draw(batch, gunName, 15, 45);
+        smallFont.draw(batch, "Clip count:" + player.selectedGun.clipCount, 15, 110);
+        smallFont.draw(batch, "Clip capacity:" + player.selectedGun.clipCapacity, 15, 130);
         if (levelUpTimer > 0) {
             levelUpTimer -= delta;
             batch.draw(levelUpTexture, viewport.getScreenWidth() / 2 - levelUpTexture.getWidth() / 2, viewport.getScreenHeight() / 2 - levelUpTexture.getHeight() / 2);
@@ -161,7 +169,7 @@ public class Hud {
 
         if (killTimer > 0) {
             killTimer -= delta;
-            batch.draw(killTexture, 50, 50, viewport.getScreenWidth() / 4, viewport.getScreenWidth() / 4 * 2 / 7);
+            batch.draw(killTexture, GameVariables.WIDTH - 300, 50, viewport.getScreenWidth() / 4, viewport.getScreenWidth() / 4 * 2 / 7);
         }
 
         if (finishGameTimer > 0) {

@@ -27,16 +27,21 @@ public class SpaceGun extends GunModel {
     public void getInputs(float delta) {
         super.getInputs(delta);
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            isFiring = true;
-            if (bulletTimer == 0) {
-                ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
-            } else {
-                if (bulletTimer > 0.5) {
+            if (canFire()) {
+                isFiring = true;
+                if (bulletTimer == 0) {
                     ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
-                    bulletTimer = 0;
+                    launchBullet();
+
+                } else {
+                    if (bulletTimer > attackSpeed) {
+                        ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
+                        launchBullet();
+                        bulletTimer = 0;
+                    }
                 }
+                bulletTimer += delta;
             }
-            bulletTimer += delta;
         } else {
             isFiring = false;
         }

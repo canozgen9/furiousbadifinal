@@ -3,6 +3,8 @@ package com.badibros.furiousbadi.objects.gameWorldObjects.collectables;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.utils.GameVariables;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,6 +49,8 @@ public class Coin extends GameObject {
         animation = new Animation(0.05f, animationFrames);
 
         setSize(GameVariables.scale(30), GameVariables.scale(30));
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/coin-gather.wav"));
+        sound.play(.4f);
 
     }
 
@@ -105,6 +109,8 @@ public class Coin extends GameObject {
     }
 
     public void onHitted() {
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/coin-gather.wav"));
+        sound.play(.4f);
         destroy = true;
         hitted = true;
     }

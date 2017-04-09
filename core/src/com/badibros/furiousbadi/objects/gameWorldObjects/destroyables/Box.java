@@ -3,6 +3,8 @@ package com.badibros.furiousbadi.objects.gameWorldObjects.destroyables;
 import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameObject;
 import com.badibros.furiousbadi.utils.GameVariables;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -88,6 +90,8 @@ public class Box extends GameObject {
         health-=damage;
         if(health<=0){
             destroyBody();
+            Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/wood-crack.wav"));
+            sound.play(.4f);
         }
     }
 
