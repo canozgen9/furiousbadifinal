@@ -27,24 +27,26 @@ public class SpaceGun extends GunModel {
     @Override
     public void getInputs(float delta) {
         super.getInputs(delta);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (canFire()) {
-                isFiring = true;
-                if (bulletTimer == 0) {
-                    ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
-                    launchBullet();
-
-                } else {
-                    if (bulletTimer > attackSpeed) {
+        if(player.gameWorld instanceof LevelWorld) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                if (canFire()) {
+                    isFiring = true;
+                    if (bulletTimer == 0) {
                         ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
                         launchBullet();
-                        bulletTimer = 0;
+
+                    } else {
+                        if (bulletTimer > attackSpeed) {
+                            ((LevelWorld) player.gameWorld).gameObjects.add(new BlueBullet(getGame(), getWorld(), this, 10, 10, 10, 10, "spritesheets/player/blue_bullet.png", 0.6f));
+                            launchBullet();
+                            bulletTimer = 0;
+                        }
                     }
+                    bulletTimer += delta;
                 }
-                bulletTimer += delta;
+            } else {
+                isFiring = false;
             }
-        } else {
-            isFiring = false;
         }
     }
 

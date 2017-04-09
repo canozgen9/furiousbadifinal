@@ -101,10 +101,10 @@ public class CreditsWorld extends GameWorld {
     public void render(float delta) {
         //Render background
         game.getBatch().begin();
-        game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(1920),GameVariables.scale(520));
+        //game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(1920),GameVariables.scale(520));
         game.getBatch().draw(canozgen,GameVariables.scale(300),GameVariables.scale(300),GameVariables.scale(190),GameVariables.scale(160));
         game.getBatch().draw(furkannakip,GameVariables.scale(500),GameVariables.scale(300),GameVariables.scale(190),GameVariables.scale(160));
-        player.draw(game.getBatch());
+        player.render(delta);
         game.getBatch().end();
         //Render game objects
         for(MenuButton button:buttons){

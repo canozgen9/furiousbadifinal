@@ -115,8 +115,8 @@ public class MainMenuWorld extends GameWorld {
     public void render(float delta) {
         //Render background
         game.getBatch().begin();
-        game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(2420),GameVariables.scale(520));
-        player.draw(game.getBatch());
+        //game.getBatch().draw(background,GameVariables.scale(40),GameVariables.scale(40),GameVariables.scale(2420),GameVariables.scale(520));
+        player.render(delta);
         game.getBatch().end();
         //Render game objects
         for(MenuButton button:buttons){

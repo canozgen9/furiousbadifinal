@@ -26,23 +26,25 @@ public class Bow extends GunModel {
     @Override
     public void getInputs(float delta) {
         super.getInputs(delta);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (canFire()) {
-                isFiring = true;
-                if (bulletTimer == 0) {
-                    ((LevelWorld) player.gameWorld).gameObjects.add(new Arrow(getGame(), getWorld(), this, 10, 10, 50, 10, "spritesheets/player/arrow.png", 0.3f));
-                    launchBullet();
-                } else {
-                    if (bulletTimer > attackSpeed) {
+        if(player.gameWorld instanceof LevelWorld) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                if (canFire()) {
+                    isFiring = true;
+                    if (bulletTimer == 0) {
                         ((LevelWorld) player.gameWorld).gameObjects.add(new Arrow(getGame(), getWorld(), this, 10, 10, 50, 10, "spritesheets/player/arrow.png", 0.3f));
                         launchBullet();
-                        bulletTimer = 0;
+                    } else {
+                        if (bulletTimer > attackSpeed) {
+                            ((LevelWorld) player.gameWorld).gameObjects.add(new Arrow(getGame(), getWorld(), this, 10, 10, 50, 10, "spritesheets/player/arrow.png", 0.3f));
+                            launchBullet();
+                            bulletTimer = 0;
+                        }
                     }
+                    bulletTimer += delta;
                 }
-                bulletTimer += delta;
+            } else {
+                isFiring = false;
             }
-        } else {
-            isFiring = false;
         }
     }
 

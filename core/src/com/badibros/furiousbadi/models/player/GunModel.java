@@ -103,8 +103,7 @@ public class GunModel extends GameObject {
 
     @Override
     public void render(float delta) {
-            draw(getGame().getBatch());
-
+        draw(getGame().getBatch());
     }
 
     @Override

@@ -183,12 +183,10 @@ public class LevelWorld extends GameWorld {
         gameObjects.add(new FiringEnemy(game, world, player.getInitialX() + 500, player.getInitialY() + 300, player, 400, 50, "red"));
         running = true;
 
-
         player = updatePlayerData(player);
 
         gameCamera.position.x = player.getB2d().getPosition().x;
         gameCamera.position.y = player.getB2d().getPosition().y;
-
 
     }
 
