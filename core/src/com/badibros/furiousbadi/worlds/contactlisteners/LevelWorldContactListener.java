@@ -4,6 +4,7 @@ import com.badibros.furiousbadi.models.enemy.EnemyBulletModel;
 import com.badibros.furiousbadi.models.player.BulletModel;
 import com.badibros.furiousbadi.objects.gameWorldObjects.collectables.Coin;
 import com.badibros.furiousbadi.objects.gameWorldObjects.destroyables.Box;
+import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.BabyEnemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.FiringEnemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.utils.GameVariables;
@@ -25,7 +26,8 @@ public class LevelWorldContactListener implements ContactListener {
 
         switch (bit) {
             case GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
-            case GameVariables.BIT_GAME_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
+            case GameVariables.BIT_GAME_FIRING_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
+            case GameVariables.BIT_GAME_BABY_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
                     ((Player) fA.getUserData()).bottomSensorColliding++;
@@ -48,19 +50,28 @@ public class LevelWorldContactListener implements ContactListener {
                 }
                 break;
 
-            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR:
-                if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR){
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR) {
                     ((FiringEnemy) fA.getUserData()).playerDetected = true;
                 }else{
                     ((FiringEnemy) fB.getUserData()).playerDetected = true;
                 }
                 break;
-            case GameVariables.BIT_GAME_BULLET | GameVariables.BIT_GAME_ENEMY:
-                if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_ENEMY){
+            case GameVariables.BIT_GAME_BULLET | GameVariables.BIT_GAME_FIRING_ENEMY:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_FIRING_ENEMY) {
                     ((FiringEnemy) fA.getUserData()).onHitted(((BulletModel) fB.getUserData()).damage, ((BulletModel) fB.getUserData()).type);
                     ((BulletModel) fB.getUserData()).onHitted();
                 }else{
                     ((FiringEnemy) fB.getUserData()).onHitted(((BulletModel) fA.getUserData()).damage, ((BulletModel) fA.getUserData()).type);
+                    ((BulletModel) fA.getUserData()).onHitted();
+                }
+                break;
+            case GameVariables.BIT_GAME_BULLET | GameVariables.BIT_GAME_BABY_ENEMY:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_BABY_ENEMY) {
+                    ((BabyEnemy) fA.getUserData()).onHitted(((BulletModel) fB.getUserData()).damage);
+                    ((BulletModel) fB.getUserData()).onHitted();
+                } else {
+                    ((BabyEnemy) fB.getUserData()).onHitted(((BulletModel) fA.getUserData()).damage);
                     ((BulletModel) fA.getUserData()).onHitted();
                 }
                 break;
@@ -99,11 +110,18 @@ public class LevelWorldContactListener implements ContactListener {
                 }
 
                 break;
-            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_ENEMY:
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_FIRING_ENEMY:
                 if (fA.getFilterData().categoryBits == GameVariables.BIT_PLAYER) {
                     ((Player) fA.getUserData()).onHitted(((FiringEnemy) fB.getUserData()).damage);
                 } else {
                     ((Player) fB.getUserData()).onHitted(((FiringEnemy) fA.getUserData()).damage);
+                }
+                break;
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BABY_ENEMY:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_PLAYER) {
+                    ((Player) fA.getUserData()).onHitted(((BabyEnemy) fB.getUserData()).damage);
+                } else {
+                    ((Player) fB.getUserData()).onHitted(((BabyEnemy) fA.getUserData()).damage);
                 }
                 break;
             case GameVariables.BIT_GAME_PLAYER_TOP_SENSOR | GameVariables.BIT_GAME_GROUND:
@@ -112,6 +130,14 @@ public class LevelWorldContactListener implements ContactListener {
                 } else {
                     ((Player) fB.getUserData()).topSensorColliding++;
                 }
+                break;
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR) {
+                    ((BabyEnemy) fA.getUserData()).playerDetected = true;
+                } else {
+                    ((BabyEnemy) fB.getUserData()).playerDetected = true;
+                }
+                System.out.println("inside");
                 break;
             default:
 
@@ -128,7 +154,7 @@ public class LevelWorldContactListener implements ContactListener {
 
         switch (bit) {
             case GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
-            case GameVariables.BIT_GAME_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
+            case GameVariables.BIT_GAME_FIRING_ENEMY | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
             case GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR:
                 if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR){
                     ((Player) fA.getUserData()).bottomSensorColliding--;
@@ -136,8 +162,8 @@ public class LevelWorldContactListener implements ContactListener {
                     ((Player) fB.getUserData()).bottomSensorColliding--;
                 }
                 break;
-            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR:
-                if(fA.getFilterData().categoryBits==GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR){
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR) {
                     ((FiringEnemy) fA.getUserData()).playerDetected = false;
                 }else{
                     ((FiringEnemy) fB.getUserData()).playerDetected = false;
@@ -149,6 +175,14 @@ public class LevelWorldContactListener implements ContactListener {
                 } else {
                     ((Player) fB.getUserData()).topSensorColliding--;
                 }
+                break;
+            case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR:
+                if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR) {
+                    ((BabyEnemy) fA.getUserData()).playerDetected = false;
+                } else {
+                    ((BabyEnemy) fB.getUserData()).playerDetected = false;
+                }
+                System.out.println("outside");
                 break;
         }
     }

@@ -10,14 +10,16 @@ public class GameVariables {
     public static final int BIT_MENUWALLS = 4;
     public static final int BIT_GAME_GROUND = 8;
     public static final int BIT_GAME_BULLET = 16;
-    public static final int BIT_GAME_ENEMY = 32;
-    public static final int BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR = 64;
+    public static final int BIT_GAME_FIRING_ENEMY = 32;
+    public static final int BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR = 64;
     public static final int BIT_GAME_BOX = 128;
     public static final int BIT_GAME_PLAYER_BOTTOM_SENSOR = 256;
     public static final int BIT_GAME_COIN = 512;
     public static final int BIT_FINISH_AREA = 1024;
     public static final int BIT_GAME_ENEMY_BULLET = 2048;
     public static final int BIT_GAME_PLAYER_TOP_SENSOR = 4096;
+    public static final int BIT_GAME_BABY_ENEMY = 8192;
+    public static final int BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR = 16384;
     //PPM Works
     public static final float PPM = 100;
     //Aspect ratio

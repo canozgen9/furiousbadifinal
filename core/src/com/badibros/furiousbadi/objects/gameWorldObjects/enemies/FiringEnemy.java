@@ -23,17 +23,18 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BABY_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_PLAYER;
 
 public class FiringEnemy extends GameObject {
 
     private static int killedEnemy = 0;
-    //Enemy Attributes
+    //BabyEnemy Attributes
     public boolean runningRight = true;
     public float damage = 50f;
     //Player Optimization
@@ -48,7 +49,7 @@ public class FiringEnemy extends GameObject {
     //Disappera animation
     private Array<TextureRegion> disappearFrames;
     private Animation disappearAnimation;
-    //Enemy animation
+    //BabyEnemy animation
     private TextureAtlas runningtextureAtlas;
     private TextureRegion standingFrame;
     private Array<TextureRegion> runningFrames;
@@ -130,8 +131,8 @@ public class FiringEnemy extends GameObject {
         fixtureDef.density = 1f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
-        fixtureDef.filter.categoryBits = BIT_GAME_ENEMY;
-        fixtureDef.filter.maskBits = BIT_PLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR | BIT_GAME_ENEMY;
+        fixtureDef.filter.categoryBits = BIT_GAME_FIRING_ENEMY;
+        fixtureDef.filter.maskBits = BIT_GAME_BABY_ENEMY | BIT_PLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR | BIT_GAME_FIRING_ENEMY;
         getB2d().createFixture(fixtureDef).setUserData(this);
 
         CircleShape shape = new CircleShape();
@@ -146,7 +147,7 @@ public class FiringEnemy extends GameObject {
         FixtureDef fixtureDef1 = new FixtureDef();
         fixtureDef1.shape = detectionShape;
         fixtureDef1.isSensor = true;
-        fixtureDef1.filter.categoryBits = BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
+        fixtureDef1.filter.categoryBits = BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR;
         fixtureDef1.filter.maskBits = BIT_PLAYER;
 
         getB2d().createFixture(fixtureDef1).setUserData(this);

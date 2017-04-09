@@ -4,7 +4,7 @@ import com.badibros.furiousbadi.FuriousBadi;
 import com.badibros.furiousbadi.models.GameScreen;
 import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.utils.GameVariables;
-import com.badibros.furiousbadi.worlds.LevelWorld;
+import com.badibros.furiousbadi.worlds.MainMenuWorld;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -40,7 +40,7 @@ public class MainScreen extends GameScreen{
         gameCamera.setToOrtho(false,viewport.getWorldWidth(),viewport.getWorldHeight());
 
         //Create World
-        currentWorld = new LevelWorld(game, viewport, gameCamera, 1);
+        currentWorld = new MainMenuWorld(game, viewport, gameCamera);
 
         //To see debugging logs
         Gdx.app.setLogLevel(Application.LOG_DEBUG);

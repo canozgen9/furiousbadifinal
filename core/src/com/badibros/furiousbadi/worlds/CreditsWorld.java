@@ -66,6 +66,8 @@ public class CreditsWorld extends GameWorld {
 
         background = new Texture("img/mainmenu/menu_background.jpg");
         header = new Texture("img/header.png");
+        gameCamera.position.x = player.getB2d().getPosition().x;
+        gameCamera.position.y = player.getB2d().getPosition().y;
     }
 
     public void getInputs(float delta) {
@@ -91,8 +93,8 @@ public class CreditsWorld extends GameWorld {
     }
 
     public void updateGameCamera(float delta){
-        gameCamera.position.x = Math.max(gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f, gameCamera.viewportWidth / 2 + GameVariables.scale(40));
-        gameCamera.position.y = Math.max(gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f, gameCamera.viewportHeight / 2 + GameVariables.scale(40));
+        gameCamera.position.x = gameCamera.position.x + (player.getB2d().getPosition().x - gameCamera.position.x) * .05f;
+        gameCamera.position.y = gameCamera.position.y + (player.getB2d().getPosition().y - gameCamera.position.y) * .05f;
         gameCamera.update();
     }
 

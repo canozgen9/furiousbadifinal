@@ -13,9 +13,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BABY_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_PLAYER;
 
@@ -50,7 +51,7 @@ public class Box extends GameObject {
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 0.3f;
         fixtureDef.filter.categoryBits = BIT_GAME_BOX;
-        fixtureDef.filter.maskBits = BIT_PLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+        fixtureDef.filter.maskBits = BIT_GAME_BABY_ENEMY | BIT_PLAYER | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_FIRING_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
         getB2d().createFixture(fixtureDef).setUserData(this);
 
         shape.dispose();

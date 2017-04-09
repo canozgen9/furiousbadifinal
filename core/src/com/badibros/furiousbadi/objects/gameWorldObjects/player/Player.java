@@ -29,10 +29,12 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_FINISH_AREA;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BABY_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR;
 
 public class Player extends GameObject {
 
@@ -49,7 +51,7 @@ public class Player extends GameObject {
     public GunModel selectedGun;
     public int topSensorColliding = 0;
     public int bottomSensorColliding = 0;
-    private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_ENEMY;
+    private short maskBits = GameVariables.BIT_GAME_GROUND | GameVariables.BIT_MENUWALLS | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_GAME_BOX | GameVariables.BIT_GAME_FIRING_ENEMY;
     //Impulses
     private Vector2 rightImpulse = new Vector2(0.05f, 0);
     private Vector2 leftImpulse = new Vector2(-0.05f, 0);
@@ -136,7 +138,7 @@ public class Player extends GameObject {
         bodyFixtureDef.friction = 0f;
         bodyFixtureDef.restitution = 0f;
         bodyFixtureDef.filter.categoryBits = GameVariables.BIT_PLAYER;
-        bodyFixtureDef.filter.maskBits = BIT_GAME_ENEMY_BULLET | GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
+        bodyFixtureDef.filter.maskBits = BIT_GAME_BABY_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BABY_ENEMY | BIT_GAME_ENEMY_BULLET | GameVariables.BIT_GAME_COIN | GameVariables.BIT_MENUBUTTON | GameVariables.BIT_MENUWALLS | GameVariables.BIT_GAME_GROUND | GameVariables.BIT_GAME_BULLET | BIT_GAME_FIRING_ENEMY | BIT_GAME_FIRING_ENEMY_PLAYER_DETECTION_SENSOR | BIT_GAME_BOX | BIT_FINISH_AREA;
         getB2d().createFixture(bodyFixtureDef).setUserData(this);
 
         //HEAD

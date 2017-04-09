@@ -13,8 +13,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BULLET;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUBUTTON;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_MENUWALLS;
@@ -90,7 +90,7 @@ public class EnemyBulletModel extends GameObject {
         fixtureDef.isSensor = true;
         fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = BIT_GAME_ENEMY_BULLET;
-        fixtureDef.filter.maskBits = BIT_MENUBUTTON | BIT_MENUWALLS | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_PLAYER;
+        fixtureDef.filter.maskBits = BIT_MENUBUTTON | BIT_MENUWALLS | BIT_GAME_GROUND | BIT_GAME_BULLET | BIT_GAME_FIRING_ENEMY | BIT_PLAYER;
         getB2d().createFixture(fixtureDef).setUserData(this);
         shape.dispose();
     }

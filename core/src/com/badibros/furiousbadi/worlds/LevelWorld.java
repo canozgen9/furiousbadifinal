@@ -6,6 +6,7 @@ import com.badibros.furiousbadi.models.GameWorld;
 import com.badibros.furiousbadi.models.enemy.BabyEnemyStracth;
 import com.badibros.furiousbadi.objects.gameWorldObjects.JointTest;
 import com.badibros.furiousbadi.objects.gameWorldObjects.destroyables.Box;
+import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.BabyEnemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.enemies.FiringEnemy;
 import com.badibros.furiousbadi.objects.gameWorldObjects.player.Player;
 import com.badibros.furiousbadi.screens.Hud;
@@ -33,10 +34,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BABY_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_BOX;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_COIN;
-import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_ENEMY_BULLET;
+import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_FIRING_ENEMY;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_GROUND;
 import static com.badibros.furiousbadi.utils.GameVariables.BIT_GAME_PLAYER_TOP_SENSOR;
 import static com.badibros.furiousbadi.utils.GameVariables.PPM;
@@ -112,7 +114,7 @@ public class LevelWorld extends GameWorld {
             fixtureDef.shape = shape;
 
             fixtureDef.filter.categoryBits = GameVariables.BIT_GAME_GROUND;
-            fixtureDef.filter.maskBits = BIT_GAME_PLAYER_TOP_SENSOR | BIT_GAME_ENEMY_BULLET | BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
+            fixtureDef.filter.maskBits = BIT_GAME_BABY_ENEMY | BIT_GAME_PLAYER_TOP_SENSOR | BIT_GAME_ENEMY_BULLET | BIT_GAME_COIN | BIT_GAME_GROUND | GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_BULLET | BIT_GAME_FIRING_ENEMY | BIT_GAME_BOX | GameVariables.BIT_GAME_PLAYER_BOTTOM_SENSOR;
             body.createFixture(fixtureDef);
 
         }
@@ -184,6 +186,9 @@ public class LevelWorld extends GameWorld {
 
         player = updatePlayerData(player);
 
+        gameCamera.position.x = player.getB2d().getPosition().x;
+        gameCamera.position.y = player.getB2d().getPosition().y;
+
 
     }
 
@@ -246,7 +251,8 @@ public class LevelWorld extends GameWorld {
             }
             gameObjectsToAdd.clear();
             for (BabyEnemyStracth babyEnemy : babyEnemiesToAdd) {
-                gameObjects.add(new FiringEnemy(game, world, babyEnemy.x * 100, babyEnemy.y * 100, player, 500, 50, babyEnemy.type));
+                gameObjects.add(new BabyEnemy(game, world, babyEnemy.x * 100, babyEnemy.y * 100, player, 500, 50, babyEnemy.type, 25, 25));
+
             }
             babyEnemiesToAdd.clear();
             world.step(1 / 60f, 6, 2);
