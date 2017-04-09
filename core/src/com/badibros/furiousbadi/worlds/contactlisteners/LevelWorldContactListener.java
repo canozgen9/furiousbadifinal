@@ -87,8 +87,10 @@ public class LevelWorldContactListener implements ContactListener {
             case GameVariables.BIT_PLAYER | GameVariables.BIT_GAME_COIN:
                 if (fA.getFilterData().categoryBits == GameVariables.BIT_GAME_COIN) {
                     ((Coin) fA.getUserData()).onHitted();
+                    ((Player) fB.getUserData()).coin++;
                 } else {
                     ((Coin) fB.getUserData()).onHitted();
+                    ((Player) fA.getUserData()).coin++;
                 }
                 break;
             case GameVariables.BIT_PLAYER | GameVariables.BIT_FINISH_AREA:

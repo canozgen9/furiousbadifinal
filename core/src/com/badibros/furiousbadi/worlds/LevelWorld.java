@@ -13,6 +13,7 @@ import com.badibros.furiousbadi.utils.GameVariables;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -25,6 +26,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -60,6 +63,7 @@ public class LevelWorld extends GameWorld {
         long id = sound.play(0.5f);
         sound.setLooping(id, true);
         this.level = level;
+
 
         world.setContactListener(new com.badibros.furiousbadi.worlds.contactlisteners.LevelWorldContactListener());
 
@@ -165,9 +169,44 @@ public class LevelWorld extends GameWorld {
         hud = new Hud(game.getBatch(), player);
         ((MainScreen) game.getScreen()).currentWorld = this;
 
-
         gameObjects.add(new FiringEnemy(game, world, player.getInitialX() + 500, player.getInitialY() + 300, player, 400, 50, "red"));
         running = true;
+
+
+        player = updatePlayerData(player);
+
+
+    }
+
+    public boolean savePlayerData(Player player) {
+        JSONObject JSONobject = new JSONObject();
+        JSONobject.put("player-level", player.level);
+        JSONobject.put("player-experience", player.experience);
+        JSONobject.put("player-coin", player.coin);
+        saveData(JSONobject.toString());
+        return true;
+    }
+
+    public Player updatePlayerData(Player player) {
+        player.level = getDataArray().getInt("player-level");
+        player.experience = getDataArray().getInt("player-experience");
+        player.coin = getDataArray().getInt("player-coin");
+        return player;
+    }
+
+    public JSONObject getDataArray() {
+        JSONObject J = new JSONObject(readData());
+        return J;
+    }
+
+    public void saveData(String s) {
+        FileHandle file = Gdx.files.local("data/player.txt");
+        file.writeString(s, false);
+    }
+
+    public String readData() {
+        FileHandle file = Gdx.files.internal("data/player.txt");
+        return file.readString();
     }
 
     @Override

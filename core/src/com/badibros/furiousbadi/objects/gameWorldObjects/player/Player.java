@@ -38,6 +38,7 @@ public class Player extends GameObject {
 
     public int experience = 1;
     public int level = 1;
+    public int coin = 0;
     public float health = 1000;
     public float maxHealth = 1000;
     public boolean runningRight = true;

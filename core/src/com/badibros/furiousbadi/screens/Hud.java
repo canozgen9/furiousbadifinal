@@ -193,10 +193,12 @@ public class Hud {
                 paused = true;
             }
         }
+        font.draw(batch, "Coin: " + player.coin, 30, GameVariables.HEIGHT - 110);
         batch.end();
     }
 
     public void finishGame(int result) {
+        ((LevelWorld) player.gameWorld).savePlayerData(player);
         if (result == 1) {
             finishGameTimer = 1;
         } else {
